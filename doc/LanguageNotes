@@ -1,0 +1,8 @@
+-All data types simplified to double
+-No recursive functions allowed
+-No support for structures or unions
+-No support for pointers
+-No external function calls
+-Ignores external imports (#includes)
+-Typedefs are not supported
+-No enumerations

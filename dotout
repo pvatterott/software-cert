@@ -1,0 +1,36 @@
+digraph AST {
+aa [label="program (99) "]
+a -> aa
+aaa [label="fn (104) "]
+aa -> aaa
+aaaa [label="type (102) "]
+aaa -> aaaa
+aaaaa [label="void (25) "]
+aaaa -> aaaaa
+aaab [label="main (34) "]
+aaa -> aaab
+aaac [label="block (98) "]
+aaa -> aaac
+aaaca [label="dec (103) "]
+aaac -> aaaca
+aaacaa [label="type (102) "]
+aaaca -> aaacaa
+aaacaaa [label="int (28) "]
+aaacaa -> aaacaaa
+aaacab [label="a (34) "]
+aaaca -> aaacab
+aaacac [label="b (34) "]
+aaaca -> aaacac
+aaacb [label="return (11) "]
+aaac -> aaacb
+aaacba [label="+ (64) "]
+aaacb -> aaacba
+aaacbaa [label="* (63) "]
+aaacba -> aaacbaa
+aaacbaaa [label="b (34) "]
+aaacbaa -> aaacbaaa
+aaacbaab [label="5 (39) "]
+aaacbaa -> aaacbaab
+aaacbab [label="a (34) "]
+aaacba -> aaacbab
+}
