@@ -1,9 +1,11 @@
 package edu.mit.compilers;
 
 import java.io.*;
+
 import antlr.Token;
 import edu.mit.compilers.IR.*;
 import edu.mit.compilers.grammar.*;
+import edu.mit.compilers.graphmodel.*;
 import edu.mit.compilers.tools.CLI;
 import edu.mit.compilers.tools.CLI.Action;
 import edu.mit.compilers.tools.TreeVisualizer;
@@ -55,7 +57,12 @@ class Main {
           System.exit(-1);
         }
         
-        IrNode cfg = IrGenerator.getIr(parser.getAST());
+        IrProgram cfg = (IrProgram)IrGenerator.getIr(parser.getAST());
+        GraphConverter gc = new GraphConverter();
+        GraphNode head = gc.convert(cfg);
+        GraphPrinter.print(head, gc.numCreated());
+        
+        //System.out.println(cfg != null ? "GOOD" : "Bad");
       } else {
         System.out.println("Unsupported target");
       }

@@ -1,11 +1,16 @@
-3/4 - high level IR defined
-3/11 - Translation to high level IR complete
-3/18 - Discussions on translation to MILM 
-3/25 - Algorithm for translation to MILM defined
-4/1 - Spring Break
-4/8 - Algo for translation to MILM implemented
-4/15 - Testing period
-4/22 - Integrated solution working
-4/29 - Test suite written
-5/6 - Testing
-5/13 - Modifications from testing implemented
+4/1: if, else statements
+      expression flattening
+      define intermediate input
+4/8:
+
+Tasks:
+Support for more language features:
+  if, else
+  for
+  switch
+  do...while
+  unary operations
+  function inlining
+  multiple variable types/casting
+  
+  

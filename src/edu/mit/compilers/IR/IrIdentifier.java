@@ -1,13 +1,9 @@
 package edu.mit.compilers.IR;
 
-public class IrIdentifier extends IrNode {
-  private String mName;
-  
-  public IrIdentifier(String name) {
-    mName = name;
+public class IrIdentifier extends IrExpression {
+
+  public IrIdentifier(String text) {
+    super(text);
   }
-  
-  public String getName() {
-    return mName;
-  }
+
 }

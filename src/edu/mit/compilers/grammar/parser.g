@@ -156,9 +156,9 @@ type_specifier
   //{ #type_specifier = #([TYPE, "type"], #type_specifier); }
   ;
 
-type_id
+/*type_id
     : IDENTIFIER
-    ;
+    ;*/
 
 // STRUCTS
 /*struct_or_union_specifier
@@ -208,8 +208,8 @@ enumerator
   ;*/
 
 type_qualifier
-  : "const"
-  | "volatile"
+  : TK_const
+  | TK_volatile
   ;
 
 declarator
@@ -219,8 +219,8 @@ declarator
   ;
 
 direct_declarator
-  :   ( IDENTIFIER | LPAREN! declarator RPAREN! ) (declarator_suffix)*
-  //:   IDENTIFIER (declarator_suffix)*
+  //:   ( IDENTIFIER | LPAREN! declarator RPAREN! ) (declarator_suffix)*
+  :   IDENTIFIER (declarator_suffix)*
   ;
 
 declarator_suffix
@@ -308,18 +308,18 @@ unary_expression
   : postfix_expression
   | INC^ unary_expression
   | DEC^ unary_expression
-  | unary_operator cast_expression
-  | TK_sizeof unary_expression
-  | TK_sizeof LPAREN! type_name RPAREN!
+  //| unary_operator cast_expression
+  //| TK_sizeof unary_expression
+  //| TK_sizeof LPAREN! type_name RPAREN!
   ;
 
 postfix_expression
   :   primary_expression
-        (   LBRACKET expression RBRACKET
-        |   LPAREN RPAREN
-        |   LPAREN argument_expression_list RPAREN
-        |   PERIOD IDENTIFIER
-        |   ARROW IDENTIFIER
+        (   LBRACKET! expression RBRACKET!
+        //|   LPAREN! RPAREN!
+        |   LPAREN! (argument_expression_list)? RPAREN!
+        //|   PERIOD IDENTIFIER
+        //|   ARROW IDENTIFIER
         |   INC
         |   DEC
         )*
@@ -360,9 +360,10 @@ constant_expression
   : conditional_expression
   ;
 
-assignment_expression
-  : conditional_expression
-  | (lvalue assignment_operator assignment_expression)
+assignment_expression!
+  : (assignee:lvalue op:assignment_operator assignment:assignment_expression)
+    { #assignment_expression = #(op, assignee, assignment); }
+  | conditional_expression
   ;
   
 lvalue
@@ -421,22 +422,22 @@ shift_expression
 // S t a t e m e n t s
 
 statement
-  : labeled_statement
+  : expression_statement
   | compound_statement
-  | expression_statement
+  | labeled_statement
   | selection_statement
   | iteration_statement
   | jump_statement
   ;
 
 labeled_statement
-  : IDENTIFIER COLON! statement
-  | TK_case^ constant_expression COLON! statement
-  | TK_default^ COLON! statement
+  : IDENTIFIER COLON! //statement
+  | TK_case^ constant_expression COLON! //statement
+  | TK_default^ COLON! //statement
   ;
 
 compound_statement
-  : LBRACE! (declaration)* (statement_list)? RBRACE!
+  : LBRACE! (declaration)* (statement)* RBRACE!
     { #compound_statement = #([BLOCK, "block"], #compound_statement); }
   ;
 
@@ -445,25 +446,28 @@ statement_list
   ;
 
 expression_statement
-  : SEMI!
-  | expression SEMI!
+  : (expression)? SEMI!
+  ;
+  
+sub_block
+  : LBRACKET! (statement)* RBRACKET!
+  | statement 
   ;
 
 selection_statement
-  : TK_if LPAREN! expression RPAREN! statement (TK_else statement)?
-  | TK_switch LPAREN! expression RPAREN! statement
+  : TK_if^ LPAREN! expression RPAREN! sub_block (TK_else sub_block)?
+  | TK_switch^ LPAREN! expression RPAREN! statement_list
   ;
 
 iteration_statement
-  : TK_while^ LPAREN! expression RPAREN! statement
-  | TK_do^ statement TK_while LPAREN! expression RPAREN! SEMI!
-  | TK_for^ LPAREN! expression_statement expression_statement (expression)? RPAREN! statement
+  : TK_while^ LPAREN! expression RPAREN! sub_block
+  | TK_do^ sub_block TK_while LPAREN! expression RPAREN! SEMI!
+  | TK_for^ LPAREN! expression_statement expression_statement (expression)? RPAREN! sub_block
   ;
 
 jump_statement
   : TK_goto^ IDENTIFIER SEMI!
   | TK_continue^ SEMI!
   | TK_break^ SEMI!
-  | TK_return^ SEMI!
-  | TK_return^ assignment_expression SEMI!
+  | TK_return^ (expression)? SEMI!
   ;

@@ -5,3 +5,5 @@ classes
 .project
 .settings
 dist/Compiler.jar
+dotout
+autogen

@@ -2,13 +2,14 @@ int main()
 {
    int a;
    a = 5;
+   b = 3;
    while (a < 3) { 
       a = a + 2;
-      b = c + 3;
+      b = a + 4;
+      while (b < 3) {
+        b = b + 1;
+      }
    }
-   
-   while (b < a + 5) 
-      a = a - 1;
    
    return a;
 }

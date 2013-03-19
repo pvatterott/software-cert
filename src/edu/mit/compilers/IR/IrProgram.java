@@ -13,4 +13,8 @@ public class IrProgram extends IrNode {
   public void addFunction(IrFunctionDef fn) {
     functions.add(fn);
   }
+  
+  public IrFunctionDef getMain() {
+    return functions.get(0);
+  }
 }
