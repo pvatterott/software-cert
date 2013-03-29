@@ -91,15 +91,18 @@ public class IrGenerator {
       }
       
       next = next.getNextSibling();
-      if (next != null && next.getNumberOfChildren() > 0) {
-        AST sub_next = next.getFirstChild();
-        for (int i = 0; i < next.getNumberOfChildren(); i++) {
-          ifStmt.addSatisfied(getIr(sub_next));
-          sub_next = sub_next.getNextSibling();
+      if (next != null) {
+        if (next != null && next.getNumberOfChildren() > 0) {
+          AST sub_next = next.getFirstChild();
+          for (int i = 0; i < next.getNumberOfChildren(); i++) {
+            ifStmt.addSatisfied(getIr(sub_next));
+            sub_next = sub_next.getNextSibling();
+          }
         }
+        ifStmt.setHasElse();
       }
-      outIr = ifStmt;
       
+      outIr = ifStmt;
       break;
 
     case CParserTokenTypes.PARAM:

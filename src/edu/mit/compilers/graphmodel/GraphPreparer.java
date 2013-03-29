@@ -5,16 +5,19 @@ import java.util.Map;
 import java.util.HashMap;
 
 import edu.mit.compilers.IR.*;
+import edu.mit.compilers.IR.IrLabel.LabelType;
 
 public class GraphPreparer implements IrNodeVisitor {
   private List<IrNode> mInstructions;
   private Map<String, Integer> mNameAssignments;
   private int mNextID;
+  private int mNextLabel;
   
   public List<IrNode> prepare(IrProgram p) {
     mInstructions = new ArrayList<IrNode>();
     mNameAssignments = new HashMap<String, Integer>();
     mNextID = 0;
+    mNextLabel = 0;
     
     visit(p);
     return mInstructions;
@@ -22,6 +25,10 @@ public class GraphPreparer implements IrNodeVisitor {
   
   private int getNextID() {
     return mNextID++;
+  }
+  
+  private int getNextLabel() {
+    return mNextLabel++;
   }
 
   @Override
@@ -128,9 +135,16 @@ public class GraphPreparer implements IrNodeVisitor {
   @Override
   public void visit(IrReturn n) {
     if (n.hasReturn()) {
-      
-      
-      
+      IrExpression value = n.getExpr();
+      value.accept(this);
+      if (value instanceof IrBinOp) {
+        IrIdentifier newValue = new IrIdentifier();
+        newValue.setResultAddress(value.getResultAddress());
+        IrReturn newReturn = new IrReturn(newValue);
+        mInstructions.add(newReturn);
+      } else {
+        mInstructions.add(n);
+      }
     } else {
       mInstructions.add(n);
     }
@@ -148,14 +162,52 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrWhile n) {
-    // TODO Auto-generated method stub
+    IrExpression cond = n.getCond();
+    cond.accept(this);
     
+    int beginNum = getNextLabel();
+    int endNum = getNextLabel();
+    IrLabel wBegin = new IrLabel(beginNum, LabelType.WBEGIN);
+    IrJmp wCheck = new IrJmp(cond, endNum);
+    mInstructions.add(wBegin);
+    mInstructions.add(wCheck);
+    
+    for (IrNode subNode : n.getChildren()) {
+      subNode.accept(this);
+    }
+    
+    IrJmp wLoop = new IrJmp(beginNum);
+    IrLabel wEnd = new IrLabel(endNum, LabelType.WEND);
+    mInstructions.add(wLoop);
+    mInstructions.add(wEnd);
   }
 
   @Override
   public void visit(IrIf n) {
-    // TODO Auto-generated method stub
+    IrExpression cond = n.getCond();
+    cond.accept(this);
+
+    int trueNum = getNextLabel();
+    int endNum = getNextLabel();
+    IrLabel trueLabel = new IrLabel(trueNum, LabelType.IF_TRUE);
+    IrLabel endLabel = new IrLabel(endNum, LabelType.IF_END);
+    IrJmp jmpTrue = new IrJmp(cond, trueNum);
+    IrJmp jmpEnd = new IrJmp(endNum);
+
+    mInstructions.add(jmpTrue);
     
+    for (IrNode elseNode : n.getUnsatisfied()) {
+      elseNode.accept(this);
+    }
+    
+    mInstructions.add(jmpEnd);
+    mInstructions.add(trueLabel);
+    
+    for (IrNode trueNode : n.getSatisfied()) {
+      trueNode.accept(this);
+    }
+    
+    mInstructions.add(endLabel);
   }
 
   @Override

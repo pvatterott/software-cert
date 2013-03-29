@@ -1,10 +1,14 @@
 package edu.mit.compilers.IR;
 
 public class IrLiteral extends IrExpression {
-  int mVal;
+  private int mVal;
 
   public IrLiteral(String text) {
      mVal = Integer.parseInt(text);
+  }
+  
+  public IrLiteral(int num) {
+    mVal = num;
   }
 
   @Override
