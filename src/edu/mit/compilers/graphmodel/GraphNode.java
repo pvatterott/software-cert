@@ -21,4 +21,5 @@ public class GraphNode {
   public boolean useNeg() {
     return mUseNegEdge;
   }
+  
 }

@@ -1,5 +1,8 @@
 package edu.mit.compilers.graphmodel;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
 
 public class GraphPrinter {
@@ -13,6 +16,13 @@ public class GraphPrinter {
     
     printMatrix(adjMatrix);
     printNodes(conditions, statements);
+    
+    try {
+      writeFile("output/adjacency.csv", null);
+      writeFile("output/nodes.csv", null);
+    } catch (IOException e) {
+      System.out.println("Failed writing to file: " + e.getMessage());
+    }
   }
   
   private static void addNodeInfo(GraphNode g, HashSet<Integer> visited, byte[][] adjMatrix, String[] conditions, String[] statements) {
@@ -42,10 +52,30 @@ public class GraphPrinter {
   private static void printMatrix(byte[][] adjMatrix) {
     for (int row = 0; row < adjMatrix.length; row++) {
       for (int col = 0; col < adjMatrix.length; col++) {
-        System.out.print(adjMatrix[row][col] + " ");
+        System.out.print(adjMatrix[row][col]);
+        if (col != adjMatrix.length - 1) {
+          System.out.print(", ");
+        }
       }
       System.out.println();
     }
+  }
+  
+  private static void writeFile(String path, String[][] values) throws IOException {
+    FileWriter fw = new FileWriter(path);
+    BufferedWriter writer = new BufferedWriter(fw);
+    
+    for (int i = 0; i < values.length; i++) {
+      for (int j = 0; j < values[i].length; j++) {
+        writer.write(values[i][j]);
+        if (j != values[i].length - 1) {
+          writer.write(", ");
+        }
+        writer.write("\n");
+      }
+    }
+    
+    writer.close();
   }
   
   private static void printNodes(String[] conditions, String[] statements) {

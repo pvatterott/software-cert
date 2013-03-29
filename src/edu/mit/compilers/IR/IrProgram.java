@@ -17,4 +17,9 @@ public class IrProgram extends IrNode {
   public IrFunctionDef getMain() {
     return functions.get(0);
   }
+  
+  @Override
+  public void accept(IrNodeVisitor v) {
+    v.visit(this);
+  }
 }

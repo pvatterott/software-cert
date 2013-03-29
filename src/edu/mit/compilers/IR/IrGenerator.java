@@ -6,7 +6,7 @@ import edu.mit.compilers.grammar.*;
 public class IrGenerator {
   public static IrNode getIr(AST ast) {
     IrNode outIr;
-    AST next;
+    AST next, lhs, rhs;
 
     switch (ast.getType()) {
 
@@ -66,8 +66,6 @@ public class IrGenerator {
       outIr = new IrWhile(expr);
       
       next = next.getNextSibling();
-      if (next.getType() == CParserTokenTypes.BLOCK) {
-      // Handle block
       if (next.getNumberOfChildren() > 0) {
         AST sub_next = next.getFirstChild();
         for (int i = 0; i < next.getNumberOfChildren(); i++) {
@@ -75,9 +73,32 @@ public class IrGenerator {
           sub_next = sub_next.getNextSibling();
         }
       }
-      } else {
-        outIr.addChild(getIr(next));
+      
+      break;
+      
+    case CParserTokenTypes.TK_if:
+      next = ast.getFirstChild();
+      IrExpression cond = (IrExpression)getIr(next);
+      IrIf ifStmt = new IrIf(cond);
+      
+      next = next.getNextSibling();
+      if (next.getNumberOfChildren() > 0) {
+        AST sub_next = next.getFirstChild();
+        for (int i = 0; i < next.getNumberOfChildren(); i++) {
+          ifStmt.addSatisfied(getIr(sub_next));
+          sub_next = sub_next.getNextSibling();
+        }
       }
+      
+      next = next.getNextSibling();
+      if (next != null && next.getNumberOfChildren() > 0) {
+        AST sub_next = next.getFirstChild();
+        for (int i = 0; i < next.getNumberOfChildren(); i++) {
+          ifStmt.addSatisfied(getIr(sub_next));
+          sub_next = sub_next.getNextSibling();
+        }
+      }
+      outIr = ifStmt;
       
       break;
 
@@ -103,29 +124,15 @@ public class IrGenerator {
     case CParserTokenTypes.ASSIGN:
       next = ast.getFirstChild();
       IrIdentifier target = (IrIdentifier)getIr(next);
-      StringBuilder expTxt = new StringBuilder();
       
-      for (int i = 1; i < ast.getNumberOfChildren(); i++) {
-        next = next.getNextSibling();
-        expTxt.append(next.getText());
-      }
+      next = next.getNextSibling();
+      IrExpression value = (IrExpression)getIr(next);
       
-      outIr = new IrAssignment(target, new IrExpression(expTxt.toString()));
-      break;
-      
-    case CParserTokenTypes.EXPR:
-      StringBuilder outStr = new StringBuilder();
-      next = ast.getFirstChild();
-      while (next != null) {
-        outStr.append(next.getText());
-        next = next.getNextSibling();
-      }
-
-      outIr = new IrExpression(outStr.toString());
+      outIr = new IrAssignment(target, value);
       break;
       
     case CParserTokenTypes.DECIMAL_LITERAL:
-      outIr = new IrExpression(ast.getText());
+      outIr = new IrLiteral(ast.getText());
       break;
       
     case CParserTokenTypes.TK_return:
@@ -137,11 +144,125 @@ public class IrGenerator {
       }
       break;
       
+    case CParserTokenTypes.PLUS:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.ADD, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.MINUS:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.ADD, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.ASTERISK:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.MUL, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.DIV:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.DIV, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.MOD:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.MOD, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.SHL:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.LEFT_SHIFT, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.SHR:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.RIGHT_SHIFT, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.LT:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.LT, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.GT:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.GT, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.LEQ:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.LEQ, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.GEQ:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.GEQ, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.EQ:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.EQ, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.NEQ:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.NEQ, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.BIN_OR:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.BIN_OR, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.BIN_AND:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.BIN_AND, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.BIN_XOR:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.BIN_XOR, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.LOG_OR:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.LOG_OR, lhs, rhs);
+      break;
+      
+    case CParserTokenTypes.LOG_AND:
+      lhs = ast.getFirstChild();
+      rhs = lhs.getNextSibling();
+      outIr = createBinOp(IrBinOp.BinOpType.LOG_AND, lhs, rhs);
+      break;
+      
     default:
-      //System.out.println("Skipped Node: " + ast.getText());
+      System.out.println("Skipped Node: " + ast.getText());
       outIr = (IrNode) (new IrRedacted());
     }
 
     return outIr;
+  }
+  
+  private static IrBinOp createBinOp(IrBinOp.BinOpType op, AST lhs, AST rhs) {
+    IrExpression leftExpr = (IrExpression)getIr(lhs);
+    IrExpression righExpr = (IrExpression)getIr(rhs);
+    return new IrBinOp(leftExpr, op, righExpr);
   }
 }

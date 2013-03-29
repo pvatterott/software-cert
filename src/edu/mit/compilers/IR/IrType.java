@@ -24,4 +24,9 @@ public class IrType extends IrNode {
       throw new RuntimeException("Unknown String Type");
     }
   }
+  
+  @Override
+  public void accept(IrNodeVisitor v) {
+    v.visit(this);
+  }
 }

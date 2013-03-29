@@ -7,8 +7,9 @@ int main()
       b = c + 3;
    }
    
-   while (b < a + 5) 
+   while (b < a + 5)  {
       a = a - 1;
+   }
    
    return a;
 }

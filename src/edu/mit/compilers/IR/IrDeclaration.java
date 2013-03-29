@@ -16,4 +16,9 @@ public class IrDeclaration extends IrNode {
   public IrIdentifier getName() {
     return mName;
   }
+  
+  @Override
+  public void accept(IrNodeVisitor v) {
+    v.visit(this);
+  }
 }

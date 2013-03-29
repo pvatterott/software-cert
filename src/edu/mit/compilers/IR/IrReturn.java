@@ -20,4 +20,9 @@ public class IrReturn extends IrNode {
   public IrExpression getExpr() {
     return mRetExpr;
   }
+  
+  @Override
+  public void accept(IrNodeVisitor v) {
+    v.visit(this);
+  }
 }

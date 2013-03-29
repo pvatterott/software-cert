@@ -1,6 +1,5 @@
 package edu.mit.compilers.graphmodel;
 
-import java.util.HashSet;
 import java.util.List;
 
 import edu.mit.compilers.IR.*;
@@ -16,7 +15,26 @@ public class GraphConverter {
     x_0.mPositiveEdge = convert(program.getMain(), x_inf);
     
     x_inf.mNodeNumber = mCurrentNum++;
+    
+    simplify(x_0);
     return x_0;
+  }
+  
+  public static void simplify(GraphNode current) {
+    GraphNode next = current.mPositiveEdge;
+    
+    if (next.mCondition == null &&
+        next.mExpression.isEmpty()) {
+      current.mPositiveEdge = next.mPositiveEdge;
+    }
+    
+    if (current.mPositiveEdge != null) {
+      simplify(current.mPositiveEdge);
+    }
+    
+    if (current.mNegativeEdge != null) {
+      simplify(current.mNegativeEdge);
+    }
   }
   
   public int numCreated() {
@@ -28,7 +46,7 @@ public class GraphConverter {
   }
   
   private GraphNode convertSwitch(IrNode n, GraphNode x_inf) {
-    if (n instanceof IrReturn) {
+ /*   if (n instanceof IrReturn) {
       return convert((IrReturn)n, x_inf);
     } else if (n instanceof IrRedacted) {
       return newNode();
@@ -38,12 +56,19 @@ public class GraphConverter {
       return convert((IrExpression)n, x_inf);
     } else if (n instanceof IrWhile) {
       return convert((IrWhile)n, x_inf);
-    } else {
+    } else if (n instanceof IrIf) {
+      return convert((IrIf)n, x_inf);
+    } else {*/
       throw new ClassCastException();
-    }
+    //}
   }
   
-  private GraphNode convert(IrAssignment a, GraphNode x_inf) {
+  private GraphNode convert(IrIf i, GraphNode x_inf) {
+    
+    return null;
+  }
+  
+  /*private GraphNode convert(IrAssignment a, GraphNode x_inf) {
     GraphNode out = newNode();
     StringBuilder s = new StringBuilder();
     s.append(a.getTarget().getText());
@@ -54,10 +79,10 @@ public class GraphConverter {
   }
   
   private GraphNode convert(IrExpression e, GraphNode x_inf) {
-    GraphNode out = newNode();
+    /*GraphNode out = newNode();
     out.mExpression = e.getText();
     return out;
-  }
+  }*/
   
   private GraphNode convert(IrFunctionDef f, GraphNode x_inf) {
     List<IrNode> nodes = f.getChildren();
@@ -85,7 +110,7 @@ public class GraphConverter {
     return out;
   }
   
-  private GraphNode convert(IrWhile w, GraphNode x_inf) {
+  /*private GraphNode convert(IrWhile w, GraphNode x_inf) {
     GraphNode out = newNode();
     out.mCondition = w.getCond().getText();
     
@@ -127,6 +152,6 @@ public class GraphConverter {
     } else {
       return x_inf;
     }
-  }
+  }*/
   
 }

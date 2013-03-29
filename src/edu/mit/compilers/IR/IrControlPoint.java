@@ -23,4 +23,9 @@ public class IrControlPoint extends IrNode {
   public List<IrNode> getChildren() {
     return mChildren;
   }
+  
+  @Override
+  public void accept(IrNodeVisitor v) {
+    v.visit(this);
+  }
 }
