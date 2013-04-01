@@ -14,7 +14,7 @@ public class IrJmp extends IrNode {
     mCondition = new IrLiteral(1);
   }
   
-  public IrNode getCond() {
+  public IrExpression getCond() {
     return mCondition;
   }
   

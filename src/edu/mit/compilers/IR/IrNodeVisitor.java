@@ -3,7 +3,6 @@ package edu.mit.compilers.IR;
 public interface IrNodeVisitor {
   public void visit(IrAssignment n);
   public void visit(IrBinOp n);
-  public void visit(IrControlPoint n);
   public void visit(IrDeclaration n);
   public void visit(IrExtFunctionCall n);
   public void visit(IrFunctionDef n);
