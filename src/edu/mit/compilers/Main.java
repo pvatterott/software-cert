@@ -58,9 +58,11 @@ class Main {
         }
         
         IrProgram cfg = (IrProgram)IrGenerator.getIr(parser.getAST());
-        GraphConverter gc = new GraphConverter();
+        OutputGenerator gen = new OutputGenerator();
+        gen.generate(cfg);
+        /*GraphConverter gc = new GraphConverter();
         GraphNode head = gc.convert(cfg);
-        GraphPrinter.print(head, gc.numCreated());
+        GraphPrinter.print(head, gc.numCreated());*/
         
         //System.out.println(cfg != null ? "GOOD" : "Bad");
       } else {

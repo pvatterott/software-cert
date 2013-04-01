@@ -5,11 +5,12 @@ public class IrIdentifier extends IrExpression {
   private int mAddrOfResult;
   
   public IrIdentifier() {
-    
+    mAddrOfResult = -1;
   }
 
   public IrIdentifier(String name) {
     mName = name;
+    mAddrOfResult = -1;
   }
   
   public String getName() {
@@ -29,5 +30,10 @@ public class IrIdentifier extends IrExpression {
   @Override
   public int getResultAddress() {
     return mAddrOfResult;
+  }
+  
+  @Override
+  public String toString() {
+    return mName + " (" + mAddrOfResult + ")";
   }
 }

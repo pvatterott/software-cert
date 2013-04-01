@@ -25,4 +25,9 @@ public class IrLiteral extends IrExpression {
   public int getResultAddress() {
     return mVal;
   }
+  
+  @Override
+  public String toString() {
+    return Integer.toString(mVal);
+  }
 }

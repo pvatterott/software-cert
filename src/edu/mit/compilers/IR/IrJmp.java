@@ -21,10 +21,19 @@ public class IrJmp extends IrNode {
   public int getTarget() {
     return mJumpTarget;
   }
+  
+  public void setTarget(int newTarget) {
+    mJumpTarget = newTarget;
+  }
 
   @Override
   public void accept(IrNodeVisitor v) {
     v.visit(this);
+  }
+  
+  @Override
+  public String toString() {
+    return "jmp " + mCondition.getResultAddress() + ", " + mJumpTarget;
   }
 
 }

@@ -156,7 +156,7 @@ public class IrGenerator {
     case CParserTokenTypes.MINUS:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createBinOp(IrBinOp.BinOpType.ADD, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.SUB, lhs, rhs);
       break;
       
     case CParserTokenTypes.ASTERISK:
@@ -256,7 +256,7 @@ public class IrGenerator {
       break;
       
     default:
-      System.out.println("Skipped Node: " + ast.getText());
+      //System.out.println("Skipped Node: " + ast.getText());
       outIr = (IrNode) (new IrRedacted());
     }
 

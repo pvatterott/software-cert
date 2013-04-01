@@ -58,4 +58,9 @@ public class IrBinOp extends IrExpression {
   public int getResultAddress() {
     return mAddrOfResult;
   }
+  
+  @Override
+  public String toString() {
+    return "(" + mLeft.toString() + " " + mOpType.toString() + " " + mRight.toString() + ")";
+  }
 }

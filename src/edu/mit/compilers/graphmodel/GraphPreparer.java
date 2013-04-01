@@ -34,6 +34,9 @@ public class GraphPreparer implements IrNodeVisitor {
   @Override
   public void visit(IrAssignment n) {
     IrExpression rhs = n.getValue();
+    IrIdentifier lhs = n.getTarget();
+    
+    lhs.accept(this);
     rhs.accept(this);
     
     if (rhs instanceof IrBinOp) {
@@ -59,11 +62,10 @@ public class GraphPreparer implements IrNodeVisitor {
     IrBinOp newOp;
     IrAssignment tempAssign;
     
-    
-    n.getRight().accept(this);
+    oldLeft.accept(this);
+    oldRight.accept(this);
     
     if (oldLeft instanceof IrBinOp) {
-      oldLeft.accept(this);
       newLeft = new IrIdentifier();
       newLeft.setResultAddress(oldLeft.getResultAddress());
     } else {
@@ -71,7 +73,6 @@ public class GraphPreparer implements IrNodeVisitor {
     }
     
     if (oldRight instanceof IrBinOp) {
-      oldRight.accept(this);
       newRight = new IrIdentifier();
       newRight.setResultAddress(oldRight.getResultAddress());
     } else {
@@ -108,10 +109,14 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrIdentifier n) {
-    if (mNameAssignments.containsKey(n.getName())) {
+    String name = n.getName();
+    if (!mNameAssignments.containsKey(name)) {
       int id = getNextID();
-      String name = n.getName();
-      mNameAssignments.put(name, id);
+      String newName = n.getName();
+      mNameAssignments.put(newName, id);
+      n.setResultAddress(id);
+    } else {
+      int id = mNameAssignments.get(name);
       n.setResultAddress(id);
     }
   }

@@ -21,4 +21,9 @@ public class IrAssignment extends IrNode {
   public void accept(IrNodeVisitor v) {
     v.visit(this);
   }
+  
+  @Override
+  public String toString() {
+    return mTarget.toString() + " = " + mValue.toString();
+  }
 }
