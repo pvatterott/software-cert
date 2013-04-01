@@ -5,7 +5,6 @@ int main()
 	if (a) {
 		return a;
 	} else {
-		return a;
+		return b;
 	}
-	return b;
 }

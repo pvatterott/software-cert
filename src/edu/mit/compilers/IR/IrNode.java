@@ -3,7 +3,7 @@ package edu.mit.compilers.IR;
 import java.util.List;
 import java.util.ArrayList;
 
-public class IrNode {
+public abstract class IrNode {
   private List<IrNode> mChildren;
   
   public IrNode() {
@@ -17,4 +17,6 @@ public class IrNode {
   public List<IrNode> getChildren() {
     return mChildren;
   }
+  
+  abstract public void accept(IrNodeVisitor v);
 }

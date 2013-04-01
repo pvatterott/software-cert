@@ -16,4 +16,14 @@ public class IrAssignment extends IrNode {
   public IrExpression getValue() {
     return mValue;
   }
+
+  @Override
+  public void accept(IrNodeVisitor v) {
+    v.visit(this);
+  }
+  
+  @Override
+  public String toString() {
+    return mTarget.toString() + " = " + mValue.toString();
+  }
 }

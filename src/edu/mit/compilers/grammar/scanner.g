@@ -12,7 +12,7 @@ options
 class CScanner extends Lexer;
 options
 {
-  k = 2;
+  k = 3;
 }
 
 tokens
@@ -29,6 +29,7 @@ tokens
   "do";
   "for";
   "if";
+  "else";
   "switch";
   "case";
   "default";

@@ -1,13 +1,6 @@
 package edu.mit.compilers.IR;
 
-public class IrExpression extends IrNode {
-  private String mText;
-  
-  public IrExpression(String text) {
-    mText = text;
-  }
-  
-  public String getText() {
-    return mText;
-  }
+abstract public class IrExpression extends IrNode {
+  abstract public void setResultAddress(int addr);
+  abstract public int getResultAddress();
 }
