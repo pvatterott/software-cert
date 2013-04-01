@@ -9,19 +9,36 @@ public class OutputGenerator {
   public void generate(IrProgram p) {
     GraphPreparer preparer = new GraphPreparer();
     NodeDescriber nDescriber = new NodeDescriber();
+    FunctionInliner inliner = new FunctionInliner();
     
-    List<IrNode> unsimplifiedLinearRep = preparer.prepare(p);
-    List<IrNode> simplifiedLinearRep = simplifyLinearRep(unsimplifiedLinearRep);
-    AdjacenyMatrix adj = getAdjacencyMatrix(simplifiedLinearRep);
+    List<IrNode> program;
+    Map<String, IrFunctionDef> defs = new HashMap<String, IrFunctionDef>();
+    Map<String, List<IrNode>> code = new HashMap<String, List<IrNode>>();
+    
+    for (IrFunctionDef fn : p.getFunctions()) {
+      String fnName = fn.getName();
+      List<IrNode> unsimplifiedLinearRep = preparer.prepare(fn);
+      List<IrNode> simplifiedLinearRep = simplifyLinearRep(unsimplifiedLinearRep);
+      
+      int i = 0;
+      for (IrNode n : simplifiedLinearRep) {
+      System.out.print(i++ + ":\t");
+      System.out.println(n);
+      }
+      
+      defs.put(fnName, fn);
+      code.put(fnName, simplifiedLinearRep);
+    }
+    
+    program = inliner.inline(defs, code);
+    
+    AdjacenyMatrix adj = getAdjacencyMatrix(program);
     NodeDescriptionTable nodeDescriptions = new NodeDescriptionTable();
     
     //int i = 0;
-    for (IrNode n : simplifiedLinearRep) {
+    for (IrNode n : program) {
       int[] desc = nDescriber.getNodeDescription(n);
       nodeDescriptions.addRow(desc);
-     
-      /*System.out.print(i++ + ":\t");
-      System.out.println(n);*/
     }
     
     GraphPrinter.print(adj, nodeDescriptions);

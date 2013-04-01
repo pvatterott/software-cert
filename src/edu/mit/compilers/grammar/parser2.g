@@ -25,6 +25,7 @@ tokens
   TYPE;
   DECLARATION;
   FN;
+  FN_CALL;
 }
 
 
@@ -187,7 +188,6 @@ body
 expression
   : (IDENTIFIER assignment_operator)=>assignment_expression
   | conditional_expression
-    //{ #expression = #([EXPR, "expr"], #expression); }
   ;
   
 assignment_expression!
@@ -244,6 +244,16 @@ primary_expression
   : IDENTIFIER
   | constant
   | LPAREN! conditional_expression RPAREN!
+  | fn_call
+  ;
+  
+fn_call
+  : IDENTIFIER LPAREN! (arg_list)? RPAREN!
+    { #fn_call = #([FN_CALL, "fn_call"], #fn_call); }
+  ;
+  
+arg_list
+  : expression (COMMA! expression)*
   ;
   
 constant

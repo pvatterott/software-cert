@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IrProgram extends IrNode {
-  private List<IrFunctionDef> functions;
+  private List<IrFunctionDef> mFunctions;
   
   public IrProgram() {
-    functions = new ArrayList<IrFunctionDef>();
+    mFunctions = new ArrayList<IrFunctionDef>();
   }
   
   public void addFunction(IrFunctionDef fn) {
-    functions.add(fn);
+    mFunctions.add(fn);
   }
   
   public IrFunctionDef getMain() {
-    return functions.get(0);
+    return mFunctions.get(0);
+  }
+  
+  public List<IrFunctionDef> getFunctions() {
+    return mFunctions;
   }
   
   @Override
