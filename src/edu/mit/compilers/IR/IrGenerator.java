@@ -255,6 +255,20 @@ public class IrGenerator {
       outIr = createBinOp(IrBinOp.BinOpType.LOG_AND, lhs, rhs);
       break;
       
+    case CParserTokenTypes.FN_CALL:
+      next = ast.getFirstChild();
+      IrIdentifier callNm = (IrIdentifier)getIr(next);
+      IrExtFunctionCall call = new IrExtFunctionCall(callNm);
+      IrExpression nextParam;
+      for (int i = 1; i < ast.getNumberOfChildren(); i++) {
+        next = next.getNextSibling();
+        nextParam = (IrExpression)getIr(next);
+        call.addParam(nextParam);
+      }
+      
+      outIr = call;
+      break;
+      
     default:
       //System.out.println("Skipped Node: " + ast.getText());
       outIr = (IrNode) (new IrRedacted());

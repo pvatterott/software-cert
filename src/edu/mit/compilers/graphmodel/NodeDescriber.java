@@ -68,7 +68,7 @@ public class NodeDescriber implements IrNodeVisitor {
   }
   
   private void addIdentifier(int val) {
-    mStore[nextIndex()] = IS_LITERAL;
+    mStore[nextIndex()] = IS_IDENTIFIER;
     mStore[nextIndex()] = val;
   }
   

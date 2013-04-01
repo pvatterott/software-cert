@@ -13,13 +13,15 @@ public class GraphPreparer implements IrNodeVisitor {
   private int mNextID;
   private int mNextLabel;
   
-  public List<IrNode> prepare(IrProgram p) {
+  public List<IrNode> prepare(IrFunctionDef p) {
     mInstructions = new ArrayList<IrNode>();
     mNameAssignments = new HashMap<String, Integer>();
     mNextID = 0;
     mNextLabel = 0;
     
     visit(p);
+    
+    p.setNumVars(mNextID);
     return mInstructions;
   }
   
@@ -39,7 +41,7 @@ public class GraphPreparer implements IrNodeVisitor {
     lhs.accept(this);
     rhs.accept(this);
     
-    if (rhs instanceof IrBinOp) {
+    if (rhs instanceof IrBinOp || rhs instanceof IrExtFunctionCall) {
       IrIdentifier newValue = new IrIdentifier();
       newValue.setResultAddress(rhs.getResultAddress());
       IrAssignment newAssign = new IrAssignment(n.getTarget(), newValue);
@@ -65,14 +67,14 @@ public class GraphPreparer implements IrNodeVisitor {
     oldLeft.accept(this);
     oldRight.accept(this);
     
-    if (oldLeft instanceof IrBinOp) {
+    if (oldLeft instanceof IrBinOp || oldLeft instanceof IrExtFunctionCall) {
       newLeft = new IrIdentifier();
       newLeft.setResultAddress(oldLeft.getResultAddress());
     } else {
       newLeft = oldLeft;
     }
     
-    if (oldRight instanceof IrBinOp) {
+    if (oldRight instanceof IrBinOp || oldRight instanceof IrExtFunctionCall) {
       newRight = new IrIdentifier();
       newRight.setResultAddress(oldRight.getResultAddress());
     } else {
@@ -91,8 +93,27 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrExtFunctionCall n) {
-    // TODO Auto-generated method stub
+    IrIdentifier name = n.getName();
+    IrExtFunctionCall newCall = new  IrExtFunctionCall(name);
+    IrIdentifier newTarget;
     
+    for (IrExpression param : n.getParams()) {
+      param.accept(this);
+      if (param instanceof IrBinOp || param instanceof IrExtFunctionCall) {
+        newTarget = new IrIdentifier();
+        newTarget.setResultAddress(param.getResultAddress());
+        newCall.addParam(newTarget);
+      } else {
+        newCall.addParam(param);
+      }
+    }
+    
+    int targetId = getNextID();
+    IrIdentifier target = new IrIdentifier();
+    target.setResultAddress(targetId);
+    n.setResultAddress(targetId);
+    IrAssignment assign = new IrAssignment(target, newCall);
+    mInstructions.add(assign);
   }
 
   @Override
@@ -123,8 +144,7 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrProgram n) {
-    IrFunctionDef main = n.getMain();
-    main.accept(this);
+    // Only deal with functions at this level
   }
 
   @Override
@@ -137,7 +157,7 @@ public class GraphPreparer implements IrNodeVisitor {
     if (n.hasReturn()) {
       IrExpression value = n.getExpr();
       value.accept(this);
-      if (value instanceof IrBinOp) {
+      if (value instanceof IrBinOp || value instanceof IrExtFunctionCall) {
         IrIdentifier newValue = new IrIdentifier();
         newValue.setResultAddress(value.getResultAddress());
         IrReturn newReturn = new IrReturn(newValue);

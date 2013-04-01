@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class IrFunctionDef extends IrNode {
-  IrType mType;
-  IrIdentifier mName;
-  List<IrDeclaration> mParams; 
+  private IrType mType;
+  private IrIdentifier mName;
+  private List<IrDeclaration> mParams; 
+  private int mNumVars;
   
   public IrFunctionDef(IrType type, IrIdentifier name) {
     mType = type;
@@ -16,6 +17,18 @@ public class IrFunctionDef extends IrNode {
   
   public void addParam(IrDeclaration param) {
     mParams.add(param);
+  }
+  
+  public String getName() {
+    return mName.getName();
+  }
+  
+  public void setNumVars(int num) {
+    mNumVars = num;
+  }
+  
+  public int getNumVars() {
+    return mNumVars;
   }
   
   @Override
