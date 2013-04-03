@@ -95,7 +95,7 @@ public class IrGenerator {
         if (next != null && next.getNumberOfChildren() > 0) {
           AST sub_next = next.getFirstChild();
           for (int i = 0; i < next.getNumberOfChildren(); i++) {
-            ifStmt.addSatisfied(getIr(sub_next));
+            ifStmt.addUnsatisfied(getIr(sub_next));
             sub_next = sub_next.getNextSibling();
           }
         }

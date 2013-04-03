@@ -26,11 +26,11 @@ public class OutputGenerator {
     
     program = inliner.inline(defs, code);
     
-    int i = 0;
+    /*int i = 0;
     for (IrNode n : program) {
       System.out.print(i++ + ":\t");
       System.out.println(n);
-    }
+    }*/
     
     AdjacenyMatrix adj = getAdjacencyMatrix(program);
     NodeDescriptionTable nodeDescriptions = new NodeDescriptionTable();

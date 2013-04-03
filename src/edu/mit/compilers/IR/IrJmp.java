@@ -33,7 +33,11 @@ public class IrJmp extends IrNode {
   
   @Override
   public String toString() {
-    return "jmp " + mCondition.getResultAddress() + ", " + mJumpTarget;
+    if (mCondition instanceof IrLiteral) {
+      return "jmp " + mCondition.toString() + ", " + mJumpTarget;
+    } else {
+      return "jmp (" + mCondition.getResultAddress() + "), " + mJumpTarget;
+    }
   }
 
 }

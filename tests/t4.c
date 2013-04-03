@@ -1,9 +1,18 @@
 int main() {
-	int a;
+	int a, b, c, d;
+	a = 5;
+	b = 6;
 	a = a + 1;
-	return foo(a);
+	
+	if (a < b) {
+		c = a - b;
+		d = 5;
+	} else {
+		c = a + b;
+		d = 6;
+	}
+
+	d = a + c;
+	return a;
 }
 
-int foo(int a) {
-	return a + 4;
-}
