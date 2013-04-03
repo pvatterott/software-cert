@@ -36,8 +36,9 @@ public class IDRecalibrator implements IrNodeVisitor {
 
   @Override
   public void visit(IrFunctionDef n) {
-    // TODO Auto-generated method stub
-    
+    for (IrDeclaration dec : n.getParams()) {
+      dec.accept(this);
+    }
   }
 
   @Override
