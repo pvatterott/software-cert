@@ -1,0 +1,47 @@
+-----------------------------
+variables.csv
+
+V lines, one per variables.
+
+Each line, string "variable name"
+
+
+user_....
+inline_fnname_...
+tmp_...
+
+-----------------------------
+nodes.csv
+
+Contains one line per node, each line comma separated, 6 integer values.
+
+For unary operations:
+opcode,varid,isliteral,value,NaN,NaN
+
+For binary operations:
+opcode,varid,isliteral,value,isliteral,value
+
+For branch nodes:
+opcode,varid,NaN,NaN,NaN,NaN
+
+isliteral -- 0 or 1, 0 indicating value is a variable id number.
+
+-----------------------------
+adjacency.csv
+
+Say N nodes.
+One line per node, each line comma separated, N values.
+
+Unary, Binary operations:
+next_node_id,NaN
+
+Branch operations:
+if_true_node_id,if_false_node_id
+
+
+
+
+
+
+
+
