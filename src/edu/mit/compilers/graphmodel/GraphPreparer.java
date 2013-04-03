@@ -88,7 +88,7 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrDeclaration n) {
-    // Not necessary to handle
+    n.getName().accept(this);
   }
 
   @Override
@@ -118,6 +118,10 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrFunctionDef n) {
+    for (IrDeclaration param : n.getParams()) {
+      param.accept(this);
+    }
+    
     for (IrNode node : n.getChildren()) {
       node.accept(this);
     }

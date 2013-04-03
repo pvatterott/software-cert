@@ -20,17 +20,17 @@ public class OutputGenerator {
       List<IrNode> unsimplifiedLinearRep = preparer.prepare(fn);
       List<IrNode> simplifiedLinearRep = simplifyLinearRep(unsimplifiedLinearRep);
       
-      int i = 0;
-      for (IrNode n : simplifiedLinearRep) {
-      System.out.print(i++ + ":\t");
-      System.out.println(n);
-      }
-      
       defs.put(fnName, fn);
       code.put(fnName, simplifiedLinearRep);
     }
     
     program = inliner.inline(defs, code);
+    
+    int i = 0;
+    for (IrNode n : program) {
+      System.out.print(i++ + ":\t");
+      System.out.println(n);
+    }
     
     AdjacenyMatrix adj = getAdjacencyMatrix(program);
     NodeDescriptionTable nodeDescriptions = new NodeDescriptionTable();

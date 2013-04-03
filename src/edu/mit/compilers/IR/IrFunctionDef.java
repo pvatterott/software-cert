@@ -27,6 +27,10 @@ public class IrFunctionDef extends IrNode {
     mNumVars = num;
   }
   
+  public List<IrDeclaration> getParams() {
+    return mParams;
+  }
+  
   public int getNumVars() {
     return mNumVars;
   }
