@@ -26,4 +26,13 @@ public class IrAssignment extends IrNode {
   public String toString() {
     return mTarget.toString() + " = " + mValue.toString();
   }
+
+  @Override
+  public IrNode copy() {
+    IrIdentifier newTarget = (IrIdentifier) mTarget.copy();
+    IrExpression newValue = (IrExpression) mValue.copy();
+    return new IrAssignment(newTarget, newValue);
+  }
+  
+  
 }

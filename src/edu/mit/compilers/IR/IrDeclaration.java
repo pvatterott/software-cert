@@ -21,4 +21,13 @@ public class IrDeclaration extends IrNode {
   public void accept(IrNodeVisitor v) {
     v.visit(this);
   }
+
+  @Override
+  public IrNode copy() {
+    IrType newType = (IrType)mType.copy();
+    IrIdentifier newName = (IrIdentifier)mName.copy();
+    return new IrDeclaration(newType, newName);
+  }
+  
+  
 }

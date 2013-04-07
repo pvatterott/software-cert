@@ -63,4 +63,15 @@ public class IrBinOp extends IrExpression {
   public String toString() {
     return "(" + mLeft.toString() + " " + mOpType.toString() + " " + mRight.toString() + ")";
   }
+
+  @Override
+  public IrNode copy() {
+    IrExpression newLeft = (IrExpression)mLeft.copy();
+    IrExpression newRight = (IrExpression)mRight.copy();
+    IrBinOp copy = new IrBinOp(newLeft, getOp(), newRight);
+    copy.setResultAddress(mAddrOfResult);
+    return copy;
+  }
+  
+  
 }

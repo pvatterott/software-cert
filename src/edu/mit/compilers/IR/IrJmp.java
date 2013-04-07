@@ -40,4 +40,10 @@ public class IrJmp extends IrNode {
     }
   }
 
+  @Override
+  public IrNode copy() {
+    IrExpression newCond = (IrExpression)mCondition.copy();
+    return new IrJmp(newCond, mJumpTarget);
+  }
+
 }

@@ -15,4 +15,10 @@ public class IrWhile extends IrNode{
   public void accept(IrNodeVisitor v) {
     v.visit(this);
   }
+
+  @Override
+  public IrNode copy() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

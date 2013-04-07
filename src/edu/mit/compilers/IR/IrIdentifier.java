@@ -36,4 +36,11 @@ public class IrIdentifier extends IrExpression {
   public String toString() {
     return mName + " (" + mAddrOfResult + ")";
   }
+
+  @Override
+  public IrNode copy() {
+    IrIdentifier copy = new IrIdentifier(mName);
+    copy.setResultAddress(mAddrOfResult);
+    return copy;
+  }
 }

@@ -39,4 +39,16 @@ public class IrFunctionDef extends IrNode {
   public void accept(IrNodeVisitor v) {
     v.visit(this);
   }
+
+  @Override
+  public IrNode copy() {
+    IrType newType = (IrType)mType.copy();
+    IrIdentifier newName = (IrIdentifier)mName.copy();
+    IrFunctionDef newDef = new IrFunctionDef(newType, newName);
+    for (IrDeclaration dec : mParams) {
+      newDef.addParam((IrDeclaration)dec.copy());
+    }
+    newDef.setNumVars(mNumVars);
+    return newDef;
+  }
 }

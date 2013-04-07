@@ -19,4 +19,6 @@ public abstract class IrNode {
   }
   
   abstract public void accept(IrNodeVisitor v);
+  
+  abstract public IrNode copy();
 }

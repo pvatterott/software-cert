@@ -32,7 +32,7 @@ public class FunctionInliner {
     boolean wasInlined = false;
     List<IrNode> instructionsToInsert = new ArrayList<IrNode>();
     
-    List<IrNode> calledFunction;
+    List<IrNode> calledFunction, calledCopy;
     IrExtFunctionCall call;
     IrFunctionDef def;
     String calledFunctionName;
@@ -49,13 +49,17 @@ public class FunctionInliner {
           target = assign.getTarget();
           calledFunctionName = call.getName().getName();
           calledFunction = mCode.get(calledFunctionName);
-          def = mDefs.get(calledFunctionName);
+          calledCopy = new ArrayList<IrNode>();
+          for (IrNode instr : calledFunction) {
+            calledCopy.add(instr.copy());
+          }
+          def = (IrFunctionDef)mDefs.get(calledFunctionName).copy();
 
-          recalibrateIDs(calledFunction, def);
+          recalibrateIDs(calledCopy, def);
           mCurrentNumIdentifiers += def.getNumVars();
           List<IrExpression> inParams = call.getParams();
           List<IrDeclaration> declaredParams = def.getParams();
-          instructionsToInsert = getCodeToInsert(calledFunction, target, inParams, declaredParams);
+          instructionsToInsert = getCodeToInsert(calledCopy, target, inParams, declaredParams);
 
           mProgram.remove(internalOffset); // Remove old assign (function call) instruction
           mProgram.addAll(internalOffset, instructionsToInsert);
@@ -65,8 +69,8 @@ public class FunctionInliner {
           recalibrateJumps(externalOffset, mProgram.size(), instructionsToInsert.size());
           break;
         }
-        internalOffset++;
       }
+      internalOffset++;
     }
     
     

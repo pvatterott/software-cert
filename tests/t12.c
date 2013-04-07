@@ -4,7 +4,7 @@ int main() {
   b = 4;
   
   c = foo(a, b) + 3;
-  //return b * bar(c, a); 
+  return b * bar(c, a); 
 }
 
 int foo(int a, int b) {

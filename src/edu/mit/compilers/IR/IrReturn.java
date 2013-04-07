@@ -30,4 +30,14 @@ public class IrReturn extends IrNode {
   public String toString() {
     return "ret " + mRetExpr.toString();
   }
+
+  @Override
+  public IrNode copy() {
+    if (mHasExpr) {
+      IrExpression newExpr = (IrExpression)mRetExpr.copy();
+      return new IrReturn(newExpr);
+    } else {
+      return new IrReturn();
+    }
+  }
 }

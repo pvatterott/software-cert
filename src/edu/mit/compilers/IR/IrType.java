@@ -29,4 +29,9 @@ public class IrType extends IrNode {
   public void accept(IrNodeVisitor v) {
     v.visit(this);
   }
+
+  @Override
+  public IrNode copy() {
+    return new IrType(mType);
+  }
 }

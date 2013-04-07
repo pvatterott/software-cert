@@ -30,4 +30,9 @@ public class IrLiteral extends IrExpression {
   public String toString() {
     return Integer.toString(mVal);
   }
+
+  @Override
+  public IrNode copy() {
+    return new IrLiteral(mVal);
+  }
 }

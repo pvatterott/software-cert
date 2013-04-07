@@ -51,4 +51,15 @@ public class IrExtFunctionCall extends IrExpression {
     
     return out;
   }
+
+  @Override
+  public IrNode copy() {
+    IrIdentifier newName = (IrIdentifier)mFnName.copy();
+    IrExtFunctionCall newCall = new IrExtFunctionCall(newName);
+    for (IrExpression param : mParams) {
+      newCall.addParam((IrExpression)param.copy());
+    }
+    newCall.setResultAddress(mAddr);
+    return newCall;
+  }
 }
