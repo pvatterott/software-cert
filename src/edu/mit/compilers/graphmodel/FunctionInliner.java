@@ -64,9 +64,11 @@ public class FunctionInliner {
           mProgram.remove(internalOffset); // Remove old assign (function call) instruction
           mProgram.addAll(internalOffset, instructionsToInsert);
           // Recalibrate jumps
-          int externalOffset = internalOffset + instructionsToInsert.size();
-          recalibrateJumps(internalOffset, externalOffset, internalOffset);
-          recalibrateJumps(externalOffset, mProgram.size(), instructionsToInsert.size());
+          int inserted = instructionsToInsert.size() - 1;
+          int externalOffset = internalOffset + inserted + 1;
+          recalibratePre(internalOffset, inserted);
+          recalibrateInserted(internalOffset, externalOffset, internalOffset); // Inserted code
+          recalibratePost(externalOffset, internalOffset, inserted); // Post code
           break;
         }
       }
@@ -79,7 +81,7 @@ public class FunctionInliner {
   
   private List<IrNode> getCodeToInsert(List<IrNode> calledFunction, IrIdentifier target, List<IrExpression> inParams, List<IrDeclaration> declaredParams) {
     List<IrNode> outInstructions = new ArrayList<IrNode>();
-    List<IrJmp> insertedJumps = new ArrayList<IrJmp>();
+    List<IrNode> insertedJumps = new ArrayList<IrNode>();
     
     int numDecs = inParams.size();
     IrIdentifier passedIn, assigned;
@@ -88,33 +90,39 @@ public class FunctionInliner {
       passedIn = (IrIdentifier)inParams.get(i);
       assigned = declaredParams.get(i).getName();
       assignment = new IrAssignment(assigned, passedIn);
+      assignment.setNextInstr(i+1);
       outInstructions.add(assignment);
     }
     
     int oldI, newI;
-    IrJmp jmp;
+    IrBranch b;
     IrReturn ret;
     for (IrNode n : calledFunction) {
       if (n instanceof IrReturn) {
         ret = (IrReturn)n;
         assignment = new IrAssignment(target, ret.getExpr());
         outInstructions.add(assignment);
-        jmp = new IrJmp(-1);
-        outInstructions.add(jmp);
-        insertedJumps.add(jmp);
-      } else if  (n instanceof IrJmp) {
-        jmp = (IrJmp)n;
-        oldI = jmp.getTarget();
+        insertedJumps.add(assignment);
+      } else if  (n instanceof IrBranch) {
+        b = (IrBranch)n;
+        oldI = b.getFalseBranch();
         newI = oldI + numDecs;
-        jmp.setTarget(newI);
+        b.setFalseBranch(newI);
+        oldI = b.getTrueBranch();
+        newI = oldI + numDecs;
+        b.setTrueBranch(newI);
+        outInstructions.add(b);
       } else {
+        oldI = n.getNextInstr();
+        newI = oldI + numDecs;
+        n.setNextInstr(newI);
         outInstructions.add(n);
       }
     }
     
     int jmpTarget = outInstructions.size();
-    for (IrJmp j : insertedJumps) {
-      j.setTarget(jmpTarget);
+    for (IrNode j : insertedJumps) {
+      j.setNextInstr(jmpTarget);
     }
 
     return outInstructions;
@@ -128,17 +136,74 @@ public class FunctionInliner {
     }
   }
   
-  private void recalibrateJumps(int start, int end, int offset) {
+  private void recalibrateInserted(int start, int end, int offset) {
     IrNode next;
-    IrJmp jmp;
-    int oldTarget, newTarget;
+    IrBranch branch;
+    int oldT, newT;
     for (int i = start; i < end; i++) {
       next = mProgram.get(i);
-      if (next instanceof IrJmp) {
-        jmp = (IrJmp)next;
-        oldTarget = jmp.getTarget();
-        newTarget = oldTarget + offset;
-        jmp.setTarget(newTarget);
+      if (next instanceof IrBranch) {
+        branch = (IrBranch)next;
+        oldT = branch.getFalseBranch();
+        newT = oldT + offset;
+        branch.setFalseBranch(newT);
+        oldT = branch.getTrueBranch();
+        newT = oldT + offset;
+        branch.setTrueBranch(newT);
+      } else {
+        oldT = next.getNextInstr();
+        newT = oldT + offset;
+        next.setNextInstr(newT);
+      }
+    }
+  }
+  
+  private void recalibratePre(int end, int offset) {
+    IrNode next;
+    IrBranch branch;
+    int oldT, newT;
+    for (int i = 0; i < end; i++) {
+      next = mProgram.get(i);
+      if (next instanceof IrBranch) {
+        branch = (IrBranch)next;
+        oldT = branch.getFalseBranch();
+        if (oldT > end) {
+          newT = oldT + offset;
+          branch.setFalseBranch(newT);
+        }
+        oldT = branch.getTrueBranch();
+        if (oldT > end) {
+          newT = oldT + offset;
+          branch.setTrueBranch(newT);
+        }
+      }
+    }
+  }
+  
+  private void recalibratePost(int postStart, int insertedStart, int offset) {
+    IrNode next;
+    IrBranch branch;
+    int oldT, newT;
+    for (int i = postStart; i < mProgram.size(); i++) {
+      next = mProgram.get(i);
+      if (next instanceof IrBranch) {
+        branch = (IrBranch)next;
+        oldT = branch.getFalseBranch();
+        if (oldT > insertedStart) {
+          newT = oldT + offset;
+          branch.setFalseBranch(newT);
+        }
+        oldT = branch.getTrueBranch();
+        if (oldT > insertedStart) {
+          newT = oldT + offset;
+          branch.setTrueBranch(newT);
+        }
+      } else {
+        oldT = next.getNextInstr();
+        if (oldT > insertedStart) {
+          newT = oldT + offset;
+          next.setNextInstr(newT);
+        }
       }
     }
   }

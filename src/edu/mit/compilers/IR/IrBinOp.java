@@ -70,6 +70,7 @@ public class IrBinOp extends IrExpression {
     IrExpression newRight = (IrExpression)mRight.copy();
     IrBinOp copy = new IrBinOp(newLeft, getOp(), newRight);
     copy.setResultAddress(mAddrOfResult);
+    copy.setNextInstr(getNextInstr());
     return copy;
   }
   

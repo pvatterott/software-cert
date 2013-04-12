@@ -41,6 +41,7 @@ public class IrIdentifier extends IrExpression {
   public IrNode copy() {
     IrIdentifier copy = new IrIdentifier(mName);
     copy.setResultAddress(mAddrOfResult);
+    copy.setNextInstr(getNextInstr());
     return copy;
   }
 }

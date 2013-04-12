@@ -31,7 +31,9 @@ public class IrAssignment extends IrNode {
   public IrNode copy() {
     IrIdentifier newTarget = (IrIdentifier) mTarget.copy();
     IrExpression newValue = (IrExpression) mValue.copy();
-    return new IrAssignment(newTarget, newValue);
+    IrAssignment out = new IrAssignment(newTarget, newValue);
+    out.setNextInstr(getNextInstr());
+    return out;
   }
   
   

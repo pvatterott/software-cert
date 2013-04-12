@@ -60,6 +60,7 @@ public class IrExtFunctionCall extends IrExpression {
       newCall.addParam((IrExpression)param.copy());
     }
     newCall.setResultAddress(mAddr);
+    newCall.setNextInstr(getNextInstr());
     return newCall;
   }
 }

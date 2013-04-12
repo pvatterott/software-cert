@@ -101,7 +101,7 @@ public class IDRecalibrator implements IrNodeVisitor {
   }
 
   @Override
-  public void visit(IrJmp n) {
+  public void visit(IrBranch n) {
     n.getCond().accept(this);
   }
 

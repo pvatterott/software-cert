@@ -187,23 +187,42 @@ public class GraphPreparer implements IrNodeVisitor {
   @Override
   public void visit(IrWhile n) {
     IrExpression cond = n.getCond();
+    int beginNum = getNextLabel();
+    IrLabel wBegin = new IrLabel(beginNum, LabelType.WBEGIN);
+    mInstructions.add(wBegin);
     cond.accept(this);
     
-    int beginNum = getNextLabel();
+    int nextNum = getNextLabel();
     int endNum = getNextLabel();
-    IrLabel wBegin = new IrLabel(beginNum, LabelType.WBEGIN);
-    IrJmp wCheck = new IrJmp(cond, endNum);
-    mInstructions.add(wBegin);
+    
+    IrLabel wNext = new IrLabel(nextNum, LabelType.WBEGIN);
+    //IrJmp wCheck = new IrJmp(cond, endNum);
+    IrBranch wCheck = new IrBranch(cond);
+    wCheck.setTrueBranch(nextNum);
+    wCheck.setFalseBranch(endNum);
+    
     mInstructions.add(wCheck);
+    mInstructions.add(wNext);
     
     for (IrNode subNode : n.getChildren()) {
       subNode.accept(this);
     }
     
-    IrJmp wLoop = new IrJmp(beginNum);
+    //IrJmp wLoop = new IrJmp(beginNum);
+    setLastInstructionTarget(beginNum);
     IrLabel wEnd = new IrLabel(endNum, LabelType.WEND);
-    mInstructions.add(wLoop);
+    //mInstructions.add(wLoop);
     mInstructions.add(wEnd);
+  }
+  
+  private void setLastInstructionTarget(int t) {
+    IrNode last = mInstructions.get(mInstructions.size()-1);
+    if (last instanceof IrBranch) {
+      IrBranch b = (IrBranch)last;
+      b.setFalseBranch(t);
+    } else {
+      last.setNextInstr(t);
+    }
   }
 
   @Override
@@ -212,26 +231,39 @@ public class GraphPreparer implements IrNodeVisitor {
     cond.accept(this);
 
     int trueNum = getNextLabel();
+    int nextNum = getNextLabel();
     int endNum = getNextLabel();
     IrLabel trueLabel = new IrLabel(trueNum, LabelType.IF_TRUE);
+    IrLabel nextLabel = new IrLabel(nextNum, LabelType.IF_TRUE);
     IrLabel endLabel = new IrLabel(endNum, LabelType.IF_END);
-    IrJmp jmpTrue = new IrJmp(cond, trueNum);
-    IrJmp jmpEnd = new IrJmp(endNum);
-
-    mInstructions.add(jmpTrue);
+    IrBranch jmpTrue = new IrBranch(cond);
     
-    for (IrNode elseNode : n.getUnsatisfied()) {
-      elseNode.accept(this);
+    if (n.hasElse() && !n.getUnsatisfied().isEmpty()) {
+      jmpTrue.setTrueBranch(trueNum);
+      jmpTrue.setFalseBranch(nextNum);
+      mInstructions.add(jmpTrue);
+      mInstructions.add(nextLabel);
+      for (IrNode elseNode : n.getUnsatisfied()) {
+        elseNode.accept(this);
+      }
+      setLastInstructionTarget(endNum);
+      mInstructions.add(trueLabel);
+      for (IrNode trueNode : n.getSatisfied()) {
+        trueNode.accept(this);
+      }
+      mInstructions.add(endLabel);
+    } else {
+      jmpTrue.setFalseBranch(endNum);
+      jmpTrue.setTrueBranch(trueNum);
+      
+      mInstructions.add(jmpTrue);
+      mInstructions.add(trueLabel);
+      for (IrNode trueNode : n.getSatisfied()) {
+        trueNode.accept(this);
+      }
+      mInstructions.add(endLabel);
     }
     
-    mInstructions.add(jmpEnd);
-    mInstructions.add(trueLabel);
-    
-    for (IrNode trueNode : n.getSatisfied()) {
-      trueNode.accept(this);
-    }
-    
-    mInstructions.add(endLabel);
   }
 
   @Override
@@ -240,8 +272,8 @@ public class GraphPreparer implements IrNodeVisitor {
   }
 
   @Override
-  public void visit(IrJmp n) {
-    // Eventually deal with goto statements
+  public void visit(IrBranch n) {
+    // Unnecessary
   }
 
 }

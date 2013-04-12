@@ -26,7 +26,9 @@ public class IrDeclaration extends IrNode {
   public IrNode copy() {
     IrType newType = (IrType)mType.copy();
     IrIdentifier newName = (IrIdentifier)mName.copy();
-    return new IrDeclaration(newType, newName);
+    IrDeclaration out = new IrDeclaration(newType, newName);
+    out.setNextInstr(getNextInstr());
+    return out;
   }
   
   

@@ -49,16 +49,18 @@ public class OutputGenerator {
     AdjacenyMatrix out = new AdjacenyMatrix(numNodes);
     
     IrNode next;
-    IrJmp nextJump;
-    int jumpTarget;
+    IrBranch nextBranch;
+    int jumpTarget, trueTarget, falseTarget;
     for (int i = 0; i < numNodes; i++) {
       next = linearRep.get(i);
-      if (next instanceof IrJmp) {
-        nextJump = (IrJmp)next;
-        jumpTarget = nextJump.getTarget();
-        out.addJumpLink(i, jumpTarget);
+      if (next instanceof IrBranch) {
+        nextBranch = (IrBranch)next;
+        trueTarget = nextBranch.getTrueBranch();
+        falseTarget = nextBranch.getFalseBranch();
+        out.addJumpLink(i, trueTarget, falseTarget);
       } else {
-        out.addNonJumpLink(i);
+        jumpTarget = next.getNextInstr();
+        out.addNonJumpLink(i, jumpTarget);
       }
     }
     
@@ -74,6 +76,8 @@ public class OutputGenerator {
     int end = unsimplified.size() - 1;
     int nonLabelIndex = 0;
     int labelNum;
+    
+    // Start by using jumps to set 
     
     // Start by gathering instructions and mapping labels to the index in a reversed list
     for (int i = end; i >= 0; i--) {
@@ -98,7 +102,31 @@ public class OutputGenerator {
     }
     
     // Alter the jumps to now use the labeled node locations
-    IrJmp j;
+    IrBranch b;
+    IrNode n;
+    int oldT, newT;
+    for (int i = 0; i < simplified.size(); i++) {
+      n = simplified.get(i);
+      if (n instanceof IrBranch) {
+        b = (IrBranch)n;
+        oldT = b.getFalseBranch();
+        newT = labelsToIndexes.get(oldT);
+        b.setFalseBranch(newT);
+        oldT = b.getTrueBranch();
+        newT = labelsToIndexes.get(oldT);
+        b.setTrueBranch(newT);
+      } else {
+        oldT = n.getNextInstr();
+        if (oldT == -1) {
+          newT = i + 1;
+        } else {
+          newT = labelsToIndexes.get(oldT);
+        }
+        n.setNextInstr(newT);
+      }
+    }
+    
+    /*IrJmp j;
     int label, index;
     for (IrNode n : simplified) {
       if (n instanceof IrJmp) {
@@ -107,7 +135,7 @@ public class OutputGenerator {
         index = labelsToIndexes.get(label);
         j.setTarget(index);
       }
-    }
+    }*/
     
     return simplified;
   }

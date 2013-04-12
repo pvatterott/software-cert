@@ -33,11 +33,14 @@ public class IrReturn extends IrNode {
 
   @Override
   public IrNode copy() {
+    IrReturn out;
     if (mHasExpr) {
       IrExpression newExpr = (IrExpression)mRetExpr.copy();
-      return new IrReturn(newExpr);
+      out = new IrReturn(newExpr);
     } else {
-      return new IrReturn();
+      out = new IrReturn();
     }
+    out.setNextInstr(getNextInstr());
+    return out;
   }
 }

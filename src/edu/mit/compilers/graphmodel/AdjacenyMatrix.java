@@ -17,13 +17,13 @@ public class AdjacenyMatrix {
     }
   }
   
-  public void addNonJumpLink(int nodeNum) {
-    mLinks[nodeNum][0] = nodeNum + 1;
+  public void addNonJumpLink(int nodeNum, int target) {
+    mLinks[nodeNum][0] = target;
   }
   
-  public void addJumpLink(int nodeNum, int target) {
-    mLinks[nodeNum][0] = target;
-    mLinks[nodeNum][1] = nodeNum + 1;
+  public void addJumpLink(int nodeNum, int trueTarget, int falseTarget) {
+    mLinks[nodeNum][0] = trueTarget;
+    mLinks[nodeNum][1] = falseTarget;
   }
   
   public String[][] getCsvFormat() {

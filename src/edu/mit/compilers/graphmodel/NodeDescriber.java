@@ -234,8 +234,9 @@ public class NodeDescriber implements IrNodeVisitor {
     // Not relevant
   }
 
+
   @Override
-  public void visit(IrJmp n) {
+  public void visit(IrBranch n) {
     addOpcode(Opcode.BRANCH);
     IrExpression cond = n.getCond();
     if (cond instanceof IrBinOp) {
