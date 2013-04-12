@@ -12,7 +12,6 @@ public interface IrNodeVisitor {
   public void visit(IrProgram n);
   public void visit(IrRedacted n);
   public void visit(IrReturn n);
-  public void visit(IrStringLiteral n);
   public void visit(IrType n);
   public void visit(IrWhile n);
   public void visit(IrIf n);

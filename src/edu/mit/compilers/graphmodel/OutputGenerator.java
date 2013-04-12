@@ -77,8 +77,6 @@ public class OutputGenerator {
     int nonLabelIndex = 0;
     int labelNum;
     
-    // Start by using jumps to set 
-    
     // Start by gathering instructions and mapping labels to the index in a reversed list
     for (int i = end; i >= 0; i--) {
       next = unsimplified.get(i);
@@ -125,17 +123,6 @@ public class OutputGenerator {
         n.setNextInstr(newT);
       }
     }
-    
-    /*IrJmp j;
-    int label, index;
-    for (IrNode n : simplified) {
-      if (n instanceof IrJmp) {
-        j = (IrJmp)n;
-        label = j.getTarget();
-        index = labelsToIndexes.get(label);
-        j.setTarget(index);
-      }
-    }*/
     
     return simplified;
   }

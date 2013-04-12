@@ -18,7 +18,9 @@ public class IrWhile extends IrNode{
 
   @Override
   public IrNode copy() {
-    // TODO Auto-generated method stub
-    return null;
+    IrExpression expr = (IrExpression)mExpr.copy();
+    IrWhile out = new IrWhile(expr);
+    out.setNextInstr(getNextInstr());
+    return out;
   }
 }

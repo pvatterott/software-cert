@@ -209,12 +209,6 @@ public class NodeDescriber implements IrNodeVisitor {
   }
 
   @Override
-  public void visit(IrStringLiteral n) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public void visit(IrType n) {
     // Not relevant
   }

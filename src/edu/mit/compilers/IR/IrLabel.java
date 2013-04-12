@@ -32,6 +32,11 @@ public class IrLabel extends IrNode {
   public void accept(IrNodeVisitor v) {
     v.visit(this);
   }
+  
+  @Override
+  public String toString() {
+    return "LABEL: " + mNum;
+  }
 
   @Override
   public IrNode copy() {

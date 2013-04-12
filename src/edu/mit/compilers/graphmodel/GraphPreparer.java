@@ -175,11 +175,6 @@ public class GraphPreparer implements IrNodeVisitor {
   }
 
   @Override
-  public void visit(IrStringLiteral n) {
-    // Should not be visited
-  }
-
-  @Override
   public void visit(IrType n) {
     // Should not be visited
   }

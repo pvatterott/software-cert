@@ -74,33 +74,23 @@ public class IDRecalibrator implements IrNodeVisitor {
   }
 
   @Override
-  public void visit(IrStringLiteral n) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
   public void visit(IrType n) {
-    // TODO Auto-generated method stub
-    
+    // Ignore
   }
 
   @Override
   public void visit(IrWhile n) {
-    // TODO Auto-generated method stub
-    
+    // Ignore
   }
 
   @Override
   public void visit(IrIf n) {
-    // TODO Auto-generated method stub
-    
+    // Ignore
   }
 
   @Override
   public void visit(IrLabel n) {
-    // TODO Auto-generated method stub
-    
+    // Ignore
   }
 
   @Override

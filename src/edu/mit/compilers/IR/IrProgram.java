@@ -29,7 +29,10 @@ public class IrProgram extends IrNode {
 
   @Override
   public IrNode copy() {
-    // TODO Auto-generated method stub
-    return null;
+    IrProgram out = new IrProgram();
+    for (IrFunctionDef f : mFunctions) {
+      out.addFunction((IrFunctionDef)f.copy());
+    }
+    return out;
   }
 }
