@@ -20,6 +20,7 @@ public class IDRecalibrator implements IrNodeVisitor {
   public void visit(IrBinOp n) {
     n.getLeft().accept(this);
     n.getRight().accept(this);
+    n.setResultAddress(n.getResultAddress() + mOffset);
   }
 
   @Override
@@ -32,6 +33,7 @@ public class IDRecalibrator implements IrNodeVisitor {
     for (IrExpression param : n.getParams()) {
       param.accept(this);
     }
+    n.setResultAddress(n.getResultAddress() + mOffset);
   }
 
   @Override
@@ -39,6 +41,7 @@ public class IDRecalibrator implements IrNodeVisitor {
     for (IrDeclaration dec : n.getParams()) {
       dec.accept(this);
     }
+    
   }
 
   @Override

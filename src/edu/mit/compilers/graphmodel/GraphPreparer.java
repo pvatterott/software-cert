@@ -196,7 +196,6 @@ public class GraphPreparer implements IrNodeVisitor {
     int endNum = getNextLabel();
     
     IrLabel wNext = new IrLabel(nextNum, LabelType.WBEGIN);
-    //IrJmp wCheck = new IrJmp(cond, endNum);
     IrBranch wCheck = new IrBranch(cond);
     wCheck.setTrueBranch(nextNum);
     wCheck.setFalseBranch(endNum);
@@ -208,10 +207,8 @@ public class GraphPreparer implements IrNodeVisitor {
       subNode.accept(this);
     }
     
-    //IrJmp wLoop = new IrJmp(beginNum);
     setLastInstructionTarget(beginNum);
     IrLabel wEnd = new IrLabel(endNum, LabelType.WEND);
-    //mInstructions.add(wLoop);
     mInstructions.add(wEnd);
   }
   
