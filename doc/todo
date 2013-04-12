@@ -1,3 +1,8 @@
-*Simplify control flow for ifs, whiles
 *Add more language functionality
-*Matrix format for linear operations
+   - int a = 3
+   - for (;;)
+*Testing, testing testing
+   - while (a < b && c > d || e == f)
+   - foo(bar(x), y)
+
+*if, while condition simplification
