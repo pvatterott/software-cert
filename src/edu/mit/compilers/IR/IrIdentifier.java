@@ -1,6 +1,6 @@
 package edu.mit.compilers.IR;
 
-public class IrIdentifier extends IrExpression {
+public class IrIdentifier extends IrExpression implements IrCondExpression {
   private String mName;
   private int mAddrOfResult;
   
@@ -43,5 +43,10 @@ public class IrIdentifier extends IrExpression {
     copy.setResultAddress(mAddrOfResult);
     copy.setNextInstr(getNextInstr());
     return copy;
+  }
+
+  @Override
+  public String getDescription() {
+    return Integer.toString(mAddrOfResult);
   }
 }

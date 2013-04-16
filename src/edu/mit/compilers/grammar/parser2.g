@@ -170,13 +170,13 @@ jump_statement
   ;
   
 iteration_statement
-  : TK_while^ LPAREN! expression RPAREN! body 
+  : TK_while^ LPAREN! conditional_expression RPAREN! body 
   //| TK_do^ sub_block TK_while LPAREN! expression RPAREN! SEMI!
   //| TK_for^ LPAREN! expression_statement expression_statement (expression)? RPAREN! sub_block
   ;
   
 selection_statement
-  : TK_if^ LPAREN! expression RPAREN! body (TK_else! body)?
+  : TK_if^ LPAREN! conditional_expression RPAREN! body (TK_else! body)?
   //| TK_switch^ LPAREN! expression RPAREN! statement_list
   ;
 
@@ -187,43 +187,12 @@ body
   
 expression
   : (IDENTIFIER assignment_operator)=>assignment_expression
-  | conditional_expression
+  | shift_expression
   ;
   
 assignment_expression!
   : assignee:IDENTIFIER op:assignment_operator assignment:conditional_expression
     { #assignment_expression = #(op, assignee, assignment); }
-  ;
-  
-conditional_expression
-  : logical_or_expression (Q^ expression COLON! conditional_expression)?
-  ;
-
-logical_or_expression
-  : logical_and_expression (LOG_OR^ logical_and_expression)*
-  ;
-
-logical_and_expression
-  : inclusive_or_expression (LOG_AND^ inclusive_or_expression)*
-  ;
-
-inclusive_or_expression
-  : exclusive_or_expression (BIN_OR^ exclusive_or_expression)*
-  ;
-
-exclusive_or_expression
-  : and_expression (BIN_XOR^ and_expression)*
-  ;
-
-and_expression
-  : equality_expression (BIN_AND^ equality_expression)*
-  ;
-equality_expression
-  : relational_expression ((EQ^ | NEQ^) relational_expression)*
-  ;
-
-relational_expression
-  : shift_expression ((LT^|GT^|LEQ^|GEQ^) shift_expression)*
   ;
 
 shift_expression
@@ -238,7 +207,38 @@ multiplicative_expression
   : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression | MOD^ primary_expression)*
   ;
   
+// ----
+conditional_expression
+  : logical_or_expression_2
+  ;
+
+logical_or_expression_2
+  : logical_and_expression_2 (LOG_OR^ logical_and_expression_2)*
+  ;
+
+logical_and_expression_2
+  : equality_expression_2 (LOG_AND^ equality_expression_2)*
+  ;
   
+equality_expression_2
+  : relational_expression_2 ((EQ^ | NEQ^) relational_expression_2)*
+  ;
+
+relational_expression_2
+  : shift_expression_2 ((LT^|GT^|LEQ^|GEQ^) shift_expression_2)*
+  ;
+
+shift_expression_2
+  : additive_expression_2 ((SHL^|SHR^) additive_expression_2)*
+  ;
+  
+additive_expression_2
+  : (multiplicative_expression_2) (PLUS^ multiplicative_expression_2 | MINUS^ multiplicative_expression_2)*
+  ;
+
+multiplicative_expression_2
+  : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression | MOD^ primary_expression)*
+  ;
   
 primary_expression
   : IDENTIFIER

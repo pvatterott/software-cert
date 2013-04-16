@@ -4,6 +4,8 @@ public interface IrNodeVisitor {
   public void visit(IrAssignment n);
   public void visit(IrBinOp n);
   public void visit(IrBranch n);
+  public void visit(IrRelationalOp n);
+  public void visit(IrLogicalOp n);
   public void visit(IrDeclaration n);
   public void visit(IrExtFunctionCall n);
   public void visit(IrFunctionDef n);

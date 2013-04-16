@@ -37,8 +37,14 @@ public class OutputGenerator {
     
     //int i = 0;
     for (IrNode n : program) {
-      int[] desc = nDescriber.getNodeDescription(n);
-      nodeDescriptions.addRow(desc);
+      if (n instanceof IrBranch) {
+        IrCondExpression cond = ((IrBranch) n).getCond();
+        String description = cond.getDescription();
+        nodeDescriptions.addBranchRow(0, description);
+      } else {
+        int[] desc = nDescriber.getNodeDescription(n);
+        nodeDescriptions.addRow(desc);
+      }
     }
     
     GraphPrinter.print(adj, nodeDescriptions);
@@ -82,7 +88,11 @@ public class OutputGenerator {
       next = unsimplified.get(i);
       if (next instanceof IrLabel) {
         labelNum = ((IrLabel) next).getNum();
-        labelsToIndexes.put(labelNum, nonLabelIndex);
+        if (simplified.size() == 0) {
+          labelsToIndexes.put(labelNum, -1);
+        } else {
+          labelsToIndexes.put(labelNum, nonLabelIndex);
+        }
       } else {
         nonLabelIndex = simplified.size();
         simplified.add(next);

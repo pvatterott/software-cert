@@ -52,20 +52,17 @@ public class IDRecalibrator implements IrNodeVisitor {
 
   @Override
   public void visit(IrLiteral n) {
-    // TODO Auto-generated method stub
-    
+    // Ignore
   }
 
   @Override
   public void visit(IrProgram n) {
-    // TODO Auto-generated method stub
-    
+    // Ignore
   }
 
   @Override
   public void visit(IrRedacted n) {
-    // TODO Auto-generated method stub
-    
+    // Ignore
   }
 
   @Override
@@ -96,6 +93,18 @@ public class IDRecalibrator implements IrNodeVisitor {
   @Override
   public void visit(IrBranch n) {
     n.getCond().accept(this);
+  }
+
+  @Override
+  public void visit(IrRelationalOp n) {
+    n.getLeft().accept(this);
+    n.getRight().accept(this);
+  }
+
+  @Override
+  public void visit(IrLogicalOp n) {
+    n.getLeft().accept(this);
+    n.getRight().accept(this);
   }
 
 }

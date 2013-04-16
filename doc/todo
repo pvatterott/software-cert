@@ -1,3 +1,5 @@
+*email list of things to contribute
+
 *Add more language functionality
    - int a = 3
    - for (;;)
@@ -6,3 +8,9 @@
    - foo(bar(x), y)
 
 *if, while condition simplification
+  node number, binary tree
+  && -> 0
+  || -> 1
+  < -> 2
+  
+  Leafs : must be comparisons

@@ -1,13 +1,13 @@
 package edu.mit.compilers.IR;
 
 public class IrWhile extends IrNode{
-  private IrExpression mExpr;
+  private IrCondExpression mExpr;
   
-  public IrWhile(IrExpression expr) {
+  public IrWhile(IrCondExpression expr) {
     mExpr = expr;
   }
   
-  public IrExpression getCond() {
+  public IrCondExpression getCond() {
     return mExpr;
   }
   
@@ -18,7 +18,7 @@ public class IrWhile extends IrNode{
 
   @Override
   public IrNode copy() {
-    IrExpression expr = (IrExpression)mExpr.copy();
+    IrCondExpression expr = (IrCondExpression)mExpr.copy();
     IrWhile out = new IrWhile(expr);
     out.setNextInstr(getNextInstr());
     return out;
