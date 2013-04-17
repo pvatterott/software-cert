@@ -191,7 +191,7 @@ expression
   ;
   
 assignment_expression!
-  : assignee:IDENTIFIER op:assignment_operator assignment:conditional_expression
+  : assignee:IDENTIFIER op:assignment_operator assignment:shift_expression
     { #assignment_expression = #(op, assignee, assignment); }
   ;
 
@@ -217,15 +217,11 @@ logical_or_expression_2
   ;
 
 logical_and_expression_2
-  : equality_expression_2 (LOG_AND^ equality_expression_2)*
-  ;
-  
-equality_expression_2
-  : relational_expression_2 ((EQ^ | NEQ^) relational_expression_2)*
+  : relational_expression_2 (LOG_AND^ relational_expression_2)*
   ;
 
 relational_expression_2
-  : shift_expression_2 ((LT^|GT^|LEQ^|GEQ^) shift_expression_2)*
+  : shift_expression_2 ((LT^|GT^|LEQ^|GEQ^|EQ^|NEQ^) shift_expression_2)+
   ;
 
 shift_expression_2
