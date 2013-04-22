@@ -19,11 +19,15 @@ We support assignments of the form:
   a *= X;
   a /= X;
   
-Where X can be an identifier, a literal, or 
+Where X can be an identifier, a literal, or combinations of the two using parenthesis and operators
   
 Operators:
 
-There are two slightly different sets of operators that are used
+In normal expressions, these are the operators allowed, in order of precedence:
+< > <= >= == !=
++ -
+* /
+
 
 Control Flow:
 We support the following control flow structures:
@@ -42,17 +46,17 @@ for (initializer; condition; update) {
 
 }
 
-In every control flow statement, condtions have two notable properties:
+In every control flow statement, conditions have two notable properties:
 1) They can contain && and ||, which is not true of an assignment statement
 2) They do not act as if there is short circuiting when verifying. Both conditions
    in an && or || statement will always be evaluated.
+   
+In for statements, the initializer and update rules should be normal assignment statements.
 
 
 Postfix/Prefix:
 Postfix/prefix (i++, ++i) are not currently supported
 
-
-  
 
 
 Functions:
@@ -65,4 +69,8 @@ int foo(int a, double b) {
 }
 
 Functions do not need to be declared above where they are used.
+
+Literals:
+
+Currently only support literals in decimal format
 

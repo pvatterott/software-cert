@@ -187,12 +187,16 @@ body
   
 expression
   : (IDENTIFIER assignment_operator)=>assignment_expression
-  | shift_expression
+  | relational_expression
   ;
   
 assignment_expression!
-  : assignee:IDENTIFIER op:assignment_operator assignment:shift_expression
+  : assignee:IDENTIFIER op:assignment_operator assignment:relational_expression
     { #assignment_expression = #(op, assignee, assignment); }
+  ;
+  
+  relational_expression
+  : shift_expression ((LT^|GT^|LEQ^|GEQ^|EQ^|NEQ^) shift_expression)*
   ;
 
 shift_expression
@@ -204,7 +208,7 @@ additive_expression
   ;
 
 multiplicative_expression
-  : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression | MOD^ primary_expression)*
+  : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression)*
   ;
   
 // ----
@@ -238,7 +242,7 @@ additive_expression_2
   ;
 
 multiplicative_expression_2
-  : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression | MOD^ primary_expression)*
+  : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression)*
   ;
   
 primary_expression
