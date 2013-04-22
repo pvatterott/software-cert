@@ -11,7 +11,11 @@ public class IrLabel extends IrNode {
   
   public enum LabelType {
     WBEGIN,
+    WNEXT,
     WEND,
+    FBEGIN,
+    FNEXT,
+    FEND,
     IF_END,
     IF_TRUE;
   }

@@ -172,7 +172,7 @@ jump_statement
 iteration_statement
   : TK_while^ LPAREN! conditional_expression RPAREN! body 
   //| TK_do^ sub_block TK_while LPAREN! expression RPAREN! SEMI!
-  //| TK_for^ LPAREN! expression_statement expression_statement (expression)? RPAREN! sub_block
+  | TK_for^ LPAREN! expression_statement cond_expression_statement (expression)? RPAREN! body
   ;
   
 selection_statement
@@ -208,6 +208,11 @@ multiplicative_expression
   ;
   
 // ----
+
+cond_expression_statement
+  : (conditional_expression)? SEMI!
+  ;
+  
 conditional_expression
   : logical_or_expression_2
   ;
@@ -262,14 +267,8 @@ assignment_operator
   : ASSIGN
   | MUL_ASSIGN
   | DIV_ASSIGN
-  | MOD_ASSIGN
   | ADD_ASSIGN
   | SUB_ASSIGN
-  | SHL_ASSIGN
-  | SHR_ASSIGN
-  | AND_ASSIGN
-  | XOR_ASSIGN
-  | OR_ASSIGN
   ;
   
   

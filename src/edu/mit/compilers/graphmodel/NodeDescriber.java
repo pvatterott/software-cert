@@ -222,4 +222,9 @@ public class NodeDescriber implements IrNodeVisitor {
     throw new RuntimeErrorException(new Error());
   }
 
+  @Override
+  public void visit(IrFor n) {
+    // Not relevant
+  }
+
 }

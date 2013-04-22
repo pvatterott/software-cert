@@ -107,4 +107,9 @@ public class IDRecalibrator implements IrNodeVisitor {
     n.getRight().accept(this);
   }
 
+  @Override
+  public void visit(IrFor n) {
+    // Ignore
+  }
+
 }

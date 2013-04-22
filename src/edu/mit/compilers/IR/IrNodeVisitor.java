@@ -16,6 +16,7 @@ public interface IrNodeVisitor {
   public void visit(IrReturn n);
   public void visit(IrType n);
   public void visit(IrWhile n);
+  public void visit(IrFor n);
   public void visit(IrIf n);
   public void visit(IrLabel n);
 }

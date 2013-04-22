@@ -185,7 +185,7 @@ public class GraphPreparer implements IrNodeVisitor {
     int nextNum = getNextLabel();
     int endNum = getNextLabel();
     
-    IrLabel wNext = new IrLabel(nextNum, LabelType.WBEGIN);
+    IrLabel wNext = new IrLabel(nextNum, LabelType.WNEXT);
     IrBranch wCheck = new IrBranch(cond);
     wCheck.setTrueBranch(nextNum);
     wCheck.setFalseBranch(endNum);
@@ -200,6 +200,36 @@ public class GraphPreparer implements IrNodeVisitor {
     setLastInstructionTarget(beginNum);
     IrLabel wEnd = new IrLabel(endNum, LabelType.WEND);
     mInstructions.add(wEnd);
+  }
+  
+  @Override
+  public void visit(IrFor n) {
+    IrNode init = n.getInitializer();
+    IrCondExpression cond = n.getCondition();
+    IrNode update = n.getUpdate();
+
+    int beginNum = getNextLabel();
+    int nextNum = getNextLabel();
+    int endNum = getNextLabel();
+    IrLabel begin = new IrLabel(beginNum, LabelType.FBEGIN);
+    IrLabel next = new IrLabel(nextNum, LabelType.FNEXT);
+    IrLabel end = new IrLabel(endNum, LabelType.FEND);
+    
+    IrBranch check = new IrBranch(cond);
+    check.setTrueBranch(nextNum);
+    check.setFalseBranch(endNum);
+    
+    init.accept(this);
+    mInstructions.add(begin);
+    cond.accept(this);
+    mInstructions.add(check);
+    mInstructions.add(next);
+    for (IrNode subNode : n.getChildren()) {
+      subNode.accept(this);
+    }
+    update.accept(this);
+    setLastInstructionTarget(beginNum);
+    mInstructions.add(end);
   }
   
   private void setLastInstructionTarget(int t) {

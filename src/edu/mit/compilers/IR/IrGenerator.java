@@ -1,6 +1,7 @@
 package edu.mit.compilers.IR;
 
 import antlr.collections.AST;
+import edu.mit.compilers.IR.IrBinOp.BinOpType;
 import edu.mit.compilers.grammar.*;
 
 public class IrGenerator {
@@ -73,7 +74,28 @@ public class IrGenerator {
           sub_next = sub_next.getNextSibling();
         }
       }
+      break;
       
+    case CParserTokenTypes.TK_for: // two one, why aren't you at your post? TK-421, do you copy?
+      next = ast.getFirstChild();
+      IrNode initializer = getIr(next);
+      
+      next = next.getNextSibling();
+      expr = (IrCondExpression)getIr(next);
+      
+      next = next.getNextSibling();
+      IrNode update = getIr(next);
+      
+      outIr = new IrFor(initializer, expr, update);
+      
+      next = next.getNextSibling();
+      if (next.getNumberOfChildren() > 0) {
+        AST sub_next = next.getFirstChild();
+        for (int i = 0; i < next.getNumberOfChildren(); i++) {
+          outIr.addChild(getIr(sub_next));
+          sub_next = sub_next.getNextSibling();
+        }
+      }
       break;
       
     case CParserTokenTypes.TK_if:
@@ -225,24 +247,6 @@ public class IrGenerator {
       outIr = createRelOp(IrRelationalOp.RelOpType.NEQ, lhs, rhs);
       break;
       
-  /*  case CParserTokenTypes.BIN_OR:
-      lhs = ast.getFirstChild();
-      rhs = lhs.getNextSibling();
-      outIr = createBinOp(IrBinOp.BinOpType.BIN_OR, lhs, rhs);
-      break;
-      
-    case CParserTokenTypes.BIN_AND:
-      lhs = ast.getFirstChild();
-      rhs = lhs.getNextSibling();
-      outIr = createBinOp(IrBinOp.BinOpType.BIN_AND, lhs, rhs);
-      break;
-      
-    case CParserTokenTypes.BIN_XOR:
-      lhs = ast.getFirstChild();
-      rhs = lhs.getNextSibling();
-      outIr = createBinOp(IrBinOp.BinOpType.BIN_XOR, lhs, rhs);
-      break;*/
-      
     case CParserTokenTypes.LOG_OR:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
@@ -267,6 +271,50 @@ public class IrGenerator {
       }
       
       outIr = call;
+      break;
+    
+    case CParserTokenTypes.ADD_ASSIGN:
+      next = ast.getFirstChild();
+      target = (IrIdentifier)getIr(next);
+      
+      next = next.getNextSibling();
+      value = (IrExpression)getIr(next);
+      
+      IrBinOp newRhs = new IrBinOp(target, BinOpType.ADD, value);
+      outIr = new IrAssignment(target, newRhs);
+      break;
+      
+    case CParserTokenTypes.SUB_ASSIGN:
+      next = ast.getFirstChild();
+      target = (IrIdentifier)getIr(next);
+      
+      next = next.getNextSibling();
+      value = (IrExpression)getIr(next);
+      
+      newRhs = new IrBinOp(target, BinOpType.SUB, value);
+      outIr = new IrAssignment(target, newRhs);
+      break;
+      
+    case CParserTokenTypes.MUL_ASSIGN:
+      next = ast.getFirstChild();
+      target = (IrIdentifier)getIr(next);
+      
+      next = next.getNextSibling();
+      value = (IrExpression)getIr(next);
+      
+      newRhs = new IrBinOp(target, BinOpType.MUL, value);
+      outIr = new IrAssignment(target, newRhs);
+      break;
+      
+    case CParserTokenTypes.DIV_ASSIGN:
+      next = ast.getFirstChild();
+      target = (IrIdentifier)getIr(next);
+      
+      next = next.getNextSibling();
+      value = (IrExpression)getIr(next);
+      
+      newRhs = new IrBinOp(target, BinOpType.DIV, value);
+      outIr = new IrAssignment(target, newRhs);
       break;
       
     default:

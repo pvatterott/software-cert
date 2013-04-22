@@ -1,16 +1,28 @@
-*email list of things to contribute
-
 *Add more language functionality
    - int a = 3
    - for (;;)
+   - break, continue
+   - doubles
 *Testing, testing testing
-   - while (a < b && c > d || e == f)
-   - foo(bar(x), y)
+*Recursion 
+*Finalize language support
+  - Potentially limit to affine + comparisons
+  - z = a * x;
+    z = a / x;
+    z = x - a;
+    z = x + b;
+    z = x + y;
+    z = x < y;
+    
+    Remove bitwise, etc.
 
-*if, while condition simplification
-  node number, binary tree
-  && -> 0
-  || -> 1
-  < -> 2
-  
-  Leafs : must be comparisons
+	WRITE DOCUMENT
+	   -Assume short circuiting does not happen
+
+*Search for different examples
+
+allow a = b < c again
+for
+double
+document
+switch

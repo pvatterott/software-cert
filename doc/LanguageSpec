@@ -1,0 +1,68 @@
+Language Specification:
+
+This document defines the restricted subset of the C programming language that
+this verifier supports.
+
+Declarations:
+
+All the variables for a function should be declared at the top of a function.
+The declarations can take the form:
+  int a;
+  double a, b;
+  int a = 3, c = 4;
+  
+Assignments:
+We support assignments of the form:
+  a = X;
+  a += X;
+  a -= X;
+  a *= X;
+  a /= X;
+  
+Where X can be an identifier, a literal, or 
+  
+Operators:
+
+There are two slightly different sets of operators that are used
+
+Control Flow:
+We support the following control flow structures:
+
+if (condition) {
+
+} else {
+
+}
+
+while (condition) {
+
+}
+
+for (initializer; condition; update) {
+
+}
+
+In every control flow statement, condtions have two notable properties:
+1) They can contain && and ||, which is not true of an assignment statement
+2) They do not act as if there is short circuiting when verifying. Both conditions
+   in an && or || statement will always be evaluated.
+
+
+Postfix/Prefix:
+Postfix/prefix (i++, ++i) are not currently supported
+
+
+  
+
+
+Functions:
+
+This language supports function definitions and calls that are non-recursive and in the same file.
+Function definitions are of the form:
+
+int foo(int a, double b) {
+
+}
+
+Functions do not need to be declared above where they are used.
+
