@@ -195,12 +195,8 @@ assignment_expression!
     { #assignment_expression = #(op, assignee, assignment); }
   ;
   
-  relational_expression
-  : shift_expression ((LT^|GT^|LEQ^|GEQ^|EQ^|NEQ^) shift_expression)*
-  ;
-
-shift_expression
-  : additive_expression ((SHL^|SHR^) additive_expression)*
+relational_expression
+  : additive_expression ((LT^|GT^|LEQ^|GEQ^|EQ^|NEQ^) additive_expression)*
   ;
   
 additive_expression
@@ -209,6 +205,13 @@ additive_expression
 
 multiplicative_expression
   : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression)*
+  ;
+
+primary_expression
+  : IDENTIFIER
+  | constant
+  | LPAREN! relational_expression RPAREN!
+  | fn_call
   ;
   
 // ----
@@ -242,10 +245,10 @@ additive_expression_2
   ;
 
 multiplicative_expression_2
-  : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression)*
+  : (primary_expression_2) (ASTERISK^ primary_expression_2 | DIV^ primary_expression_2)*
   ;
   
-primary_expression
+primary_expression_2
   : IDENTIFIER
   | constant
   | LPAREN! conditional_expression RPAREN!

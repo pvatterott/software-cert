@@ -1,6 +1,5 @@
 *Add more language functionality
    - int a = 3
-   - for (;;)
    - break, continue
    - doubles
 *Testing, testing testing
@@ -20,6 +19,14 @@
 	   -Assume short circuiting does not happen
 
 *Search for different examples
+
+*registers.csv -> Descriptions of node types (int/float)
+
+*Maintain Opcodes file
+
+*Better Language Spec
+
+*Multiple literal types in nodes file
 
 allow a = b < c again
 for

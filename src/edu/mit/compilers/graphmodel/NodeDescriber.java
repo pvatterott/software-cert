@@ -227,4 +227,9 @@ public class NodeDescriber implements IrNodeVisitor {
     // Not relevant
   }
 
+  @Override
+  public void visit(IrParam n) {
+    // Not relevant
+  }
+
 }

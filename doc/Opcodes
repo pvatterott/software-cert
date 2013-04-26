@@ -1,11 +1,21 @@
-0 Branch
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
+BRANCH(0),
+RETURN(1),
+    ASSIGN(2),
+    ADD(3),
+    SUB(4),
+    MUL(5),
+    DIV(6),
+    MOD(7),
+    BIN_OR(8),
+    BIN_AND(9),
+    BIN_XOR(10),
+    LOG_OR(11),
+    LOG_AND(12),
+    RIGHT_SHIFT(13),
+    LEFT_SHIFT(14),
+    EQ(15),
+    NEQ(16),
+    LT(17),
+    GT(18),
+    LEQ(19),
+    GEQ(20);

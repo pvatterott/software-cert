@@ -2,6 +2,7 @@ package edu.mit.compilers.IR;
 
 import antlr.collections.AST;
 import edu.mit.compilers.IR.IrBinOp.BinOpType;
+import edu.mit.compilers.IR.IrType.Type;
 import edu.mit.compilers.grammar.*;
 
 public class IrGenerator {
@@ -40,7 +41,7 @@ public class IrGenerator {
         AST sub_next = next.getFirstChild();
         for (int i = 0; i < next.getNumberOfChildren(); i++) {
           if (sub_next.getNumberOfChildren() > 0) {
-            fn.addParam((IrDeclaration)getIr(sub_next));
+            fn.addParam((IrParam)getIr(sub_next));
           }
           sub_next = sub_next.getNextSibling();
         }
@@ -134,7 +135,7 @@ public class IrGenerator {
       next = next.getNextSibling();
       IrIdentifier id = (IrIdentifier)getIr(next);
       
-      outIr = new IrDeclaration(type, id);
+      outIr = new IrParam(type, id);
       break;
       
     case CParserTokenTypes.IDENTIFIER:
@@ -315,6 +316,25 @@ public class IrGenerator {
       
       newRhs = new IrBinOp(target, BinOpType.DIV, value);
       outIr = new IrAssignment(target, newRhs);
+      break;
+      
+    case CParserTokenTypes.DECLARATION:
+      next = ast.getFirstChild();
+      type = (IrType)getIr(next);
+      
+      outIr = new IrDeclaration(type);
+      while ((next = next.getNextSibling()) != null) {
+        IrNode declared = getIr(next);
+        outIr.addChild(declared);
+      }
+      break;
+      
+    case CParserTokenTypes.TK_int:
+      outIr = new IrType(Type.INT);
+      break;
+      
+    case CParserTokenTypes.TK_double:
+      outIr = new IrType(Type.DOUBLE);
       break;
       
     default:

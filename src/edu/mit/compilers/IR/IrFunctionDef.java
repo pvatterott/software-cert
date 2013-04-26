@@ -6,16 +6,16 @@ import java.util.ArrayList;
 public class IrFunctionDef extends IrNode {
   private IrType mType;
   private IrIdentifier mName;
-  private List<IrDeclaration> mParams; 
+  private List<IrParam> mParams; 
   private int mNumVars;
   
   public IrFunctionDef(IrType type, IrIdentifier name) {
     mType = type;
     mName = name;
-    mParams = new ArrayList<IrDeclaration>();
+    mParams = new ArrayList<IrParam>();
   }
   
-  public void addParam(IrDeclaration param) {
+  public void addParam(IrParam param) {
     mParams.add(param);
   }
   
@@ -27,7 +27,7 @@ public class IrFunctionDef extends IrNode {
     mNumVars = num;
   }
   
-  public List<IrDeclaration> getParams() {
+  public List<IrParam> getParams() {
     return mParams;
   }
   
@@ -45,8 +45,8 @@ public class IrFunctionDef extends IrNode {
     IrType newType = (IrType)mType.copy();
     IrIdentifier newName = (IrIdentifier)mName.copy();
     IrFunctionDef newDef = new IrFunctionDef(newType, newName);
-    for (IrDeclaration dec : mParams) {
-      newDef.addParam((IrDeclaration)dec.copy());
+    for (IrParam dec : mParams) {
+      newDef.addParam((IrParam)dec.copy());
     }
     newDef.setNumVars(mNumVars);
     return newDef;
