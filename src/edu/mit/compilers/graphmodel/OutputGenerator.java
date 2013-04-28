@@ -42,7 +42,7 @@ public class OutputGenerator {
         String description = cond.getDescription();
         nodeDescriptions.addBranchRow(0, description);
       } else {
-        int[] desc = nDescriber.getNodeDescription(n);
+        String[] desc = nDescriber.getNodeDescription(n);
         nodeDescriptions.addRow(desc);
       }
     }

@@ -1,14 +1,37 @@
 package edu.mit.compilers.IR;
 
 public class IrLiteral extends IrExpression implements IrCondExpression {
-  private int mVal;
+  private int mIntVal;
+  private double mDoubleVal;
+  private boolean mIsDouble;
 
-  public IrLiteral(String text) {
-     mVal = Integer.parseInt(text);
+  public IrLiteral(boolean isDouble, String text) {
+    mIsDouble = isDouble;
+    if (isDouble) {
+      mDoubleVal = Double.parseDouble(text);
+    } else {
+      mIntVal = Integer.parseInt(text);
+    }
   }
   
   public IrLiteral(int num) {
-    mVal = num;
+    mIntVal = num;
+  }
+  
+  public IrLiteral(double num) {
+    mDoubleVal = num;
+  }
+  
+  public boolean isDouble() {
+    return mIsDouble;
+  }
+  
+  public int getIntVal() {
+    return mIntVal;
+  }
+  
+  public double getDoubleVal() {
+    return mDoubleVal;
   }
 
   @Override
@@ -23,21 +46,29 @@ public class IrLiteral extends IrExpression implements IrCondExpression {
 
   @Override
   public int getResultAddress() {
-    return mVal;
+    throw new IllegalArgumentException();
   }
   
   @Override
   public String toString() {
-    return Integer.toString(mVal);
+    if (mIsDouble) {
+      return Double.toString(mDoubleVal);
+    } else {
+      return Integer.toString(mIntVal);
+    }
   }
 
   @Override
   public IrNode copy() {
-    return new IrLiteral(mVal);
+    if (mIsDouble) {
+      return new IrLiteral(mDoubleVal);
+    } else {
+      return new IrLiteral(mIntVal);
+    }
   }
 
   @Override
   public String getDescription() {
-    return "$" + Integer.toString(mVal);
+    return "$" + this.toString();
   }
 }

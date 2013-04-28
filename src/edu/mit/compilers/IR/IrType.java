@@ -21,6 +21,8 @@ public class IrType extends IrNode {
       return Type.INT;
     } else if (t.equals("void")) {
       return Type.VOID;
+    } else if (t.equals("double")) {
+      return Type.DOUBLE;
     } else {
       throw new RuntimeException("Unknown String Type");
     }

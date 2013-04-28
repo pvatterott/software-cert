@@ -1,8 +1,12 @@
-int main(int a, double b) {
+int main() {
   int a = 3;
   double b = 2.5;
   int c;
   
-  c = a + (int)b;
+  c = foo(a) + (int)b;
   return c;
+}
+
+int foo(int a) {
+  return 3 * a;
 }
