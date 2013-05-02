@@ -60,14 +60,6 @@ classdef ControlFlowGraph < Graph
                     nd = exits(I);
                 end
             end
-            
-            keyboard
-            
-            
-            
- 
-            
-            
         end
     end
 end
