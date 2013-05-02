@@ -1,0 +1,3 @@
+pr = ProgramGraph(load('../output/nodes.csv'),...
+                  load('../output/adjacency.csv'));
+g = ControlFlowGraph(pr);
