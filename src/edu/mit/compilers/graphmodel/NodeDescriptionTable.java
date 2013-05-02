@@ -25,6 +25,17 @@ public class NodeDescriptionTable {
     mTable.add(strRow);
   }
   
+  public void addBranchRow(int op, String cond) {
+    String[] strRow = new String[ROW_LENGTH];
+    strRow[0] = Integer.toString(op);
+    strRow[1] = cond;
+    for (int i = 2; i < ROW_LENGTH; i++) {
+      strRow[i] = NAN;
+    }
+    
+    mTable.add(strRow);
+  }
+  
   public String[][] getCsvFormat() {
     int size = mTable.size();
     String[][] out = new String[size][ROW_LENGTH];

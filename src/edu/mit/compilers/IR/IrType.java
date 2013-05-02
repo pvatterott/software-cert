@@ -3,6 +3,7 @@ package edu.mit.compilers.IR;
 public class IrType extends IrNode {
   public enum Type {
     VOID,
+    DOUBLE,
     INT;
   }
   private Type mType;

@@ -1,5 +1,7 @@
 package edu.mit.compilers.graphmodel;
 
+import javax.management.RuntimeErrorException;
+
 import edu.mit.compilers.IR.*;
 
 public class NodeDescriber implements IrNodeVisitor {
@@ -100,50 +102,17 @@ public class NodeDescriber implements IrNodeVisitor {
     case ADD:
       addOpcode(Opcode.ADD);
       break;
-    case BIN_AND:
-      addOpcode(Opcode.BIN_AND);
-      break;
-    case BIN_OR:
-      addOpcode(Opcode.BIN_OR);
-      break;
-    case BIN_XOR:
-      addOpcode(Opcode.BIN_XOR);
-      break;
     case DIV:
       addOpcode(Opcode.DIV);
       break;
-    case EQ:
-      addOpcode(Opcode.EQ);
-      break;
-    case GEQ:
-      addOpcode(Opcode.GEQ);
-      break;
-    case GT:
-      addOpcode(Opcode.GT);
-      break;
     case LEFT_SHIFT:
       addOpcode(Opcode.LEFT_SHIFT);
-      break;
-    case LEQ:
-      addOpcode(Opcode.LEQ);
-      break;
-    case LOG_AND:
-      addOpcode(Opcode.LOG_AND);
-      break;
-    case LOG_OR:
-      addOpcode(Opcode.LOG_OR);
-      break;
-    case LT:
-      addOpcode(Opcode.LT);
       break;
     case MOD:
       addOpcode(Opcode.MOD);
       break;
     case MUL:
       addOpcode(Opcode.MUL);
-      break;
-    case NEQ:
-      addOpcode(Opcode.NEQ);
       break;
     case RIGHT_SHIFT:
       addOpcode(Opcode.RIGHT_SHIFT);
@@ -231,13 +200,36 @@ public class NodeDescriber implements IrNodeVisitor {
 
   @Override
   public void visit(IrBranch n) {
-    addOpcode(Opcode.BRANCH);
+    /*addOpcode(Opcode.BRANCH);
     IrExpression cond = n.getCond();
     if (cond instanceof IrBinOp) {
       addIdentifier(cond.getResultAddress());
     } else {
       cond.accept(this);
-    }
+    }*/
+    throw new RuntimeErrorException(new Error());
+  }
+
+  @Override
+  public void visit(IrRelationalOp n) {
+    // TODO Auto-generated method stub
+    throw new RuntimeErrorException(new Error());
+  }
+
+  @Override
+  public void visit(IrLogicalOp n) {
+    // TODO Auto-generated method stub
+    throw new RuntimeErrorException(new Error());
+  }
+
+  @Override
+  public void visit(IrFor n) {
+    // Not relevant
+  }
+
+  @Override
+  public void visit(IrParam n) {
+    // Not relevant
   }
 
 }

@@ -1,6 +1,6 @@
 package edu.mit.compilers.IR;
 
-public class IrLiteral extends IrExpression {
+public class IrLiteral extends IrExpression implements IrCondExpression {
   private int mVal;
 
   public IrLiteral(String text) {
@@ -34,5 +34,10 @@ public class IrLiteral extends IrExpression {
   @Override
   public IrNode copy() {
     return new IrLiteral(mVal);
+  }
+
+  @Override
+  public String getDescription() {
+    return "$" + Integer.toString(mVal);
   }
 }

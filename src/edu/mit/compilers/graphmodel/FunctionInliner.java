@@ -58,7 +58,7 @@ public class FunctionInliner {
           recalibrateIDs(calledCopy, def);
           mCurrentNumIdentifiers += def.getNumVars();
           List<IrExpression> inParams = call.getParams();
-          List<IrDeclaration> declaredParams = def.getParams();
+          List<IrParam> declaredParams = def.getParams();
           instructionsToInsert = getCodeToInsert(calledCopy, target, inParams, declaredParams);
 
           mProgram.remove(internalOffset); // Remove old assign (function call) instruction
@@ -79,7 +79,7 @@ public class FunctionInliner {
     return wasInlined;
   }
   
-  private List<IrNode> getCodeToInsert(List<IrNode> calledFunction, IrIdentifier target, List<IrExpression> inParams, List<IrDeclaration> declaredParams) {
+  private List<IrNode> getCodeToInsert(List<IrNode> calledFunction, IrIdentifier target, List<IrExpression> inParams, List<IrParam> declaredParams) {
     List<IrNode> outInstructions = new ArrayList<IrNode>();
     List<IrNode> insertedJumps = new ArrayList<IrNode>();
     

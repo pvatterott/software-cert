@@ -1,16 +1,22 @@
 package edu.mit.compilers.IR;
 
-public class IrDeclaration extends IrNode {
+public class IrParam extends IrNode {
   private IrType mType;
+  private IrIdentifier mName;
   
-  public IrDeclaration(IrType type) {
+  public IrParam(IrType type, IrIdentifier name) {
     mType = type;
+    mName = name;
   }
   
   public IrType getType() {
     return mType;
   }
   
+  public IrIdentifier getName() {
+    return mName;
+  }
+
   @Override
   public void accept(IrNodeVisitor v) {
     v.visit(this);
@@ -18,11 +24,7 @@ public class IrDeclaration extends IrNode {
 
   @Override
   public IrNode copy() {
-    IrType newType = (IrType)mType.copy();
-    IrDeclaration out = new IrDeclaration(newType);
-    out.setNextInstr(getNextInstr());
-    return out;
+    // TODO Auto-generated method stub
+    return null;
   }
-  
-  
 }

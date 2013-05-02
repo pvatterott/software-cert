@@ -29,19 +29,8 @@ public class IrBinOp extends IrExpression {
 		MUL,
 		DIV,
 		MOD,
-		BIN_OR,
-		BIN_AND,
-		BIN_XOR,
-		LOG_OR,
-		LOG_AND,
 		RIGHT_SHIFT,
 		LEFT_SHIFT,
-		EQ,
-    NEQ,
-    LT,
-    GT,
-    LEQ,
-    GEQ;
 	}
 	
   @Override

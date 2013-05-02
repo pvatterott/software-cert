@@ -1,3 +1,35 @@
-*Simplify control flow for ifs, whiles
 *Add more language functionality
-*Matrix format for linear operations
+   - int a = 3
+   - break, continue
+   - doubles
+*Testing, testing testing
+*Recursion 
+*Finalize language support
+  - Potentially limit to affine + comparisons
+  - z = a * x;
+    z = a / x;
+    z = x - a;
+    z = x + b;
+    z = x + y;
+    z = x < y;
+    
+    Remove bitwise, etc.
+
+	WRITE DOCUMENT
+	   -Assume short circuiting does not happen
+
+*Search for different examples
+
+*registers.csv -> Descriptions of node types (int/float)
+
+*Maintain Opcodes file
+
+*Better Language Spec
+
+*Multiple literal types in nodes file
+
+allow a = b < c again
+for
+double
+document
+switch
