@@ -1,8 +1,11 @@
 package edu.mit.compilers.IR;
 
-public class IrRelationalOp extends IrNode implements IrCondExpression {
+import edu.mit.compilers.semchecker.SymbolTable;
+
+public class IrRelationalOp extends IrExpression implements IrCondExpression {
   private RelOpType mOpType;
   private IrExpression mLeft, mRight;
+  private int mAddr;
   
   public IrRelationalOp(IrExpression left, RelOpType op, IrExpression right) {
     mLeft = left;
@@ -63,6 +66,25 @@ public class IrRelationalOp extends IrNode implements IrCondExpression {
            ((IrCondExpression)mLeft).getDescription() + " " +
            ((IrCondExpression)mRight).getDescription() + ")";
   }
-  
-  
+
+  @Override
+  public void setResultAddress(int addr) {
+    mAddr = addr;
+  }
+
+  @Override
+  public int getResultAddress() {
+    return mAddr;
+  }
+
+  @Override
+  public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
+    IrType lType = mLeft.getType(table, currentFunction);
+    IrType rType = mRight.getType(table, currentFunction);
+    if (lType.equals(rType)) {
+      return lType;
+    } else {
+      return new IrType(IrType.Type.VOID);
+    }
+  }
 }

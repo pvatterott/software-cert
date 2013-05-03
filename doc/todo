@@ -1,7 +1,5 @@
 *Add more language functionality
-   - int a = 3
    - break, continue
-   - doubles
 *Testing, testing testing
 *Recursion 
 *Finalize language support

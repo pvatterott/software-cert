@@ -1,5 +1,8 @@
 package edu.mit.compilers.IR;
 
+import edu.mit.compilers.IR.IrType.Type;
+import edu.mit.compilers.semchecker.SymbolTable;
+
 public class IrLiteral extends IrExpression implements IrCondExpression {
   private int mIntVal;
   private double mDoubleVal;
@@ -70,5 +73,14 @@ public class IrLiteral extends IrExpression implements IrCondExpression {
   @Override
   public String getDescription() {
     return "$" + this.toString();
+  }
+
+  @Override
+  public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
+    if (mIsDouble) {
+      return new IrType(Type.DOUBLE);
+    } else {
+      return new IrType(Type.INT);
+    }
   }
 }

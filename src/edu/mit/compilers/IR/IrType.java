@@ -29,8 +29,33 @@ public class IrType extends IrNode {
   }
   
   @Override
+  public boolean equals(Object obj) {
+    if (obj == this) 
+      return true;
+    if (!(obj instanceof IrType))
+      return false;
+    
+    IrType other = (IrType)obj;
+    return other.getType() == this.getType();
+  }
+  
+  @Override
   public void accept(IrNodeVisitor v) {
     v.visit(this);
+  }
+  
+  @Override
+  public String toString() {
+    switch (mType) {
+    case INT:
+      return "int";
+    case DOUBLE:
+      return "double";
+    case VOID:
+      return "void";
+    default:
+      return "NONE";
+    }
   }
 
   @Override

@@ -249,8 +249,31 @@ public class NodeDescriber implements IrNodeVisitor {
 
   @Override
   public void visit(IrRelationalOp n) {
-    // TODO Auto-generated method stub
-    throw new RuntimeErrorException(new Error());
+    switch (n.getOp()) {
+    case EQ:
+      addOpcode(Opcode.EQ);
+      break;
+    case NEQ:
+      addOpcode(Opcode.NEQ);
+      break;
+    case LT:
+      addOpcode(Opcode.LT);
+      break;
+    case GT:
+      addOpcode(Opcode.GT);
+      break;
+    case LEQ:
+      addOpcode(Opcode.LEQ);
+      break;
+    case GEQ:
+      addOpcode(Opcode.GEQ);
+      break;
+    }
+    
+    addTarget(mTarget);
+    
+    n.getLeft().accept(this);
+    n.getRight().accept(this);
   }
 
   @Override

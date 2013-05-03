@@ -6,6 +6,7 @@ import antlr.Token;
 import edu.mit.compilers.IR.*;
 import edu.mit.compilers.grammar.*;
 import edu.mit.compilers.graphmodel.*;
+import edu.mit.compilers.semchecker.SemanticChecker;
 import edu.mit.compilers.tools.CLI;
 import edu.mit.compilers.tools.CLI.Action;
 import edu.mit.compilers.tools.TreeVisualizer;
@@ -56,9 +57,11 @@ class Main {
           System.out.println("ERROR");
           System.exit(-1);
         }
+        SemanticChecker checker = new SemanticChecker();
+        OutputGenerator gen = new OutputGenerator();
         
         IrProgram cfg = (IrProgram)IrGenerator.getIr(parser.getAST());
-        OutputGenerator gen = new OutputGenerator();
+        checker.check(cfg);
         gen.generate(cfg);
       } else {
         System.out.println("Unsupported target");

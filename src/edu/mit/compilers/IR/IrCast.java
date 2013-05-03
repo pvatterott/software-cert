@@ -1,5 +1,7 @@
 package edu.mit.compilers.IR;
 
+import edu.mit.compilers.semchecker.SymbolTable;
+
 public class IrCast extends IrExpression {
   IrType mType;
   IrExpression mExpr;
@@ -40,6 +42,11 @@ public class IrCast extends IrExpression {
     IrCast copy = new IrCast(t, e);
     copy.setResultAddress(mAddr);
     return copy;
+  }
+
+  @Override
+  public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
+    return mType;
   }
 
 }

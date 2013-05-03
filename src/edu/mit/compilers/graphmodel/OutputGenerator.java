@@ -16,7 +16,7 @@ public class OutputGenerator {
     Map<String, List<IrNode>> code = new HashMap<String, List<IrNode>>();
     
     for (IrFunctionDef fn : p.getFunctions()) {
-      String fnName = fn.getName();
+      String fnName = fn.getStrName();
       List<IrNode> unsimplifiedLinearRep = preparer.prepare(fn);
       List<IrNode> simplifiedLinearRep = simplifyLinearRep(unsimplifiedLinearRep);
       

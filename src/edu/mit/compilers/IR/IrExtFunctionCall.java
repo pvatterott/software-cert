@@ -3,6 +3,8 @@ package edu.mit.compilers.IR;
 import java.util.List;
 import java.util.ArrayList;
 
+import edu.mit.compilers.semchecker.SymbolTable;
+
 public class IrExtFunctionCall extends IrExpression {
   IrIdentifier mFnName;
   List<IrExpression> mParams;
@@ -62,5 +64,10 @@ public class IrExtFunctionCall extends IrExpression {
     newCall.setResultAddress(mAddr);
     newCall.setNextInstr(getNextInstr());
     return newCall;
+  }
+
+  @Override
+  public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
+    return table.getFunctionReturnType(mFnName);
   }
 }
