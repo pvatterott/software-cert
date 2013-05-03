@@ -19,8 +19,16 @@ public class IrFunctionDef extends IrNode {
     mParams.add(param);
   }
   
-  public String getName() {
+  public String getStrName() {
     return mName.getName();
+  }
+  
+  public IrIdentifier getName() {
+    return mName;
+  }
+  
+  public IrType getType() {
+    return mType;
   }
   
   public void setNumVars(int num) {

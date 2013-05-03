@@ -1,7 +1,5 @@
 *Add more language functionality
-   - int a = 3
    - break, continue
-   - doubles
 *Testing, testing testing
 *Recursion 
 *Finalize language support
@@ -33,3 +31,16 @@ for
 double
 document
 switch
+---------------------------------------------------------
+Eliminate LT, GT
+
+Double comparison => LT = LEQ, GT = GEQ
+Int comparison => a + 1 <= b
+
+Revert conditional expressions
+
+Annotate variables with probable range
+Specify default range at top of the file
+
+Talk to Kenny
+Inference of type range

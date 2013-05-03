@@ -41,7 +41,7 @@ public class GraphPreparer implements IrNodeVisitor {
     lhs.accept(this);
     rhs.accept(this);
     
-    if (rhs instanceof IrBinOp || rhs instanceof IrExtFunctionCall) {
+    if (rhs instanceof IrBinOp || rhs instanceof IrExtFunctionCall || rhs instanceof IrCast) {
       IrIdentifier newValue = new IrIdentifier();
       newValue.setResultAddress(rhs.getResultAddress());
       IrAssignment newAssign = new IrAssignment(n.getTarget(), newValue);
@@ -53,7 +53,7 @@ public class GraphPreparer implements IrNodeVisitor {
   
   private IrExpression getSimplified(IrExpression old) {
     IrExpression out;
-    if (old instanceof IrBinOp || old instanceof IrExtFunctionCall) {
+    if (old instanceof IrBinOp || old instanceof IrExtFunctionCall || old instanceof IrCast) {
       out = new IrIdentifier();
       out.setResultAddress(old.getResultAddress());
     } else {
@@ -83,6 +83,27 @@ public class GraphPreparer implements IrNodeVisitor {
     
     newOp = new IrBinOp(newLeft, n.getOp(), newRight);
     tempAssign = new IrAssignment(newTarget, newOp);
+    mInstructions.add(tempAssign);
+  }
+  
+  @Override
+  public void visit(IrCast n) {
+    IrType t = n.getType();
+    IrExpression e = n.getExpression();
+    
+    int newAddr = getNextID();
+    IrIdentifier newTarget = new IrIdentifier();
+    newTarget.setResultAddress(newAddr);
+    n.setResultAddress(newAddr);
+    IrCast newCast;
+    IrAssignment tempAssign;
+    IrExpression newE;
+    
+    e.accept(this);
+    newE = getSimplified(e);
+    
+    newCast = new IrCast(t, newE);
+    tempAssign = new IrAssignment(newTarget, newCast);
     mInstructions.add(tempAssign);
   }
 
@@ -158,7 +179,7 @@ public class GraphPreparer implements IrNodeVisitor {
     if (n.hasReturn()) {
       IrExpression value = n.getExpr();
       value.accept(this);
-      if (value instanceof IrBinOp || value instanceof IrExtFunctionCall) {
+      if (value instanceof IrBinOp || value instanceof IrExtFunctionCall || value instanceof IrCast) {
         IrIdentifier newValue = new IrIdentifier();
         newValue.setResultAddress(value.getResultAddress());
         IrReturn newReturn = new IrReturn(newValue);
@@ -318,5 +339,7 @@ public class GraphPreparer implements IrNodeVisitor {
   public void visit(IrParam n) {
     n.getName().accept(this);
   }
+
+
 
 }

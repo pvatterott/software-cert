@@ -20,4 +20,5 @@ public interface IrNodeVisitor {
   public void visit(IrIf n);
   public void visit(IrParam n);
   public void visit(IrLabel n);
+  public void visit(IrCast n);
 }

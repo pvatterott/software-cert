@@ -1,5 +1,7 @@
 package edu.mit.compilers.IR;
 
+import edu.mit.compilers.semchecker.SymbolTable;
+
 public class IrBinOp extends IrExpression {
   private IrExpression mLeft, mRight;
   private BinOpType mOpType;
@@ -63,5 +65,14 @@ public class IrBinOp extends IrExpression {
     return copy;
   }
   
-  
+  @Override
+  public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
+    IrType lType = mLeft.getType(table, currentFunction);
+    IrType rType = mRight.getType(table, currentFunction);
+    if (lType.equals(rType)) {
+      return lType;
+    } else {
+      return new IrType(IrType.Type.VOID);
+    }
+  }
 }

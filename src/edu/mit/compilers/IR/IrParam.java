@@ -24,7 +24,10 @@ public class IrParam extends IrNode {
 
   @Override
   public IrNode copy() {
-    // TODO Auto-generated method stub
-    return null;
+    IrType type = (IrType)mType.copy();
+    IrIdentifier name = (IrIdentifier)mName.copy();
+    IrParam copy = new IrParam(type, name);
+    copy.setNextInstr(getNextInstr());
+    return copy;
   }
 }

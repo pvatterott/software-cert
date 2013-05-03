@@ -43,7 +43,6 @@ public class IDRecalibrator implements IrNodeVisitor {
     for (IrParam dec : n.getParams()) {
       dec.accept(this);
     }
-    
   }
 
   @Override
@@ -117,6 +116,11 @@ public class IDRecalibrator implements IrNodeVisitor {
   @Override
   public void visit(IrParam n) {
     n.getName().accept(this);
+  }
+
+  @Override
+  public void visit(IrCast n) {
+    n.getExpression().accept(this);
   }
 
 }

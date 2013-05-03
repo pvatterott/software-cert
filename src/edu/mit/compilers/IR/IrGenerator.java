@@ -158,7 +158,7 @@ public class IrGenerator {
       break;
       
     case CParserTokenTypes.DECIMAL_LITERAL:
-      outIr = new IrLiteral(ast.getText());
+      outIr = new IrLiteral(false, ast.getText());
       break;
       
     case CParserTokenTypes.TK_return:
@@ -335,6 +335,20 @@ public class IrGenerator {
       
     case CParserTokenTypes.TK_double:
       outIr = new IrType(Type.DOUBLE);
+      break;
+      
+    case CParserTokenTypes.CAST:
+      next = ast.getFirstChild();
+      type = (IrType)getIr(next);
+      
+      next = next.getNextSibling();
+      IrExpression exp = (IrExpression)getIr(next);
+      
+      outIr = new IrCast(type, exp);
+      break;
+      
+    case CParserTokenTypes.FLOATING_POINT_LITERAL:
+      outIr = new IrLiteral(true, ast.getText());
       break;
       
     default:

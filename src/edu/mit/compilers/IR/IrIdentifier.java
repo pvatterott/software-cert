@@ -1,5 +1,7 @@
 package edu.mit.compilers.IR;
 
+import edu.mit.compilers.semchecker.SymbolTable;
+
 public class IrIdentifier extends IrExpression implements IrCondExpression {
   private String mName;
   private int mAddrOfResult;
@@ -48,5 +50,28 @@ public class IrIdentifier extends IrExpression implements IrCondExpression {
   @Override
   public String getDescription() {
     return Integer.toString(mAddrOfResult);
+  }
+
+  @Override
+  public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
+    return table.getLiteralType(currentFunction, this);
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (obj instanceof IrIdentifier) {
+      IrIdentifier other = (IrIdentifier)obj;
+      return this.mName.equals(other.mName);
+    } else {
+      return false;
+    }
+  }
+  
+  @Override
+  public int hashCode() {
+    return mName.hashCode();
   }
 }

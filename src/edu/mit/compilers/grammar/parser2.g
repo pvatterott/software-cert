@@ -26,6 +26,7 @@ tokens
   DECLARATION;
   FN;
   FN_CALL;
+  CAST;
 }
 
 
@@ -96,6 +97,7 @@ function_definition
 type_specifier
   : TK_void   { #type_specifier = #([TYPE, "type"], #type_specifier); }
   | TK_int    { #type_specifier = #([TYPE, "type"], #type_specifier); }
+  | TK_double { #type_specifier = #([TYPE, "type"], #type_specifier); }
   ;
 
 parameter_type_list
@@ -118,8 +120,13 @@ compound_statement
   ;
   
 declaration
-  : TK_int (init_declarator_list)? SEMI!
+  : type_name (init_declarator_list)? SEMI!
   { #declaration = #([DECLARATION, "dec"], #declaration); }
+  ;
+  
+type_name
+  : TK_int
+  | TK_double
   ;
   
 init_declarator_list
@@ -204,7 +211,17 @@ additive_expression
   ;
 
 multiplicative_expression
-  : (primary_expression) (ASTERISK^ primary_expression | DIV^ primary_expression)*
+  : (cast_expression) (ASTERISK^ cast_expression | DIV^ cast_expression)*
+  ;
+  
+cast_expression
+  : cast
+  | primary_expression
+  ;
+  
+cast!
+  : LPAREN! left:type_name RPAREN! right:primary_expression
+  { #cast = #([CAST, "cast"], left, right); }
   ;
 
 primary_expression
@@ -245,7 +262,13 @@ additive_expression_2
   ;
 
 multiplicative_expression_2
-  : (primary_expression_2) (ASTERISK^ primary_expression_2 | DIV^ primary_expression_2)*
+  : (cast_expression_2) (ASTERISK^ cast_expression_2 | DIV^ cast_expression_2)*
+  ;
+  
+cast_expression_2
+  : LPAREN! type_name RPAREN! cast_expression_2
+    { #cast_expression_2 = #([CAST, "cast"], #cast_expression_2); }
+  | primary_expression_2
   ;
   
 primary_expression_2
@@ -268,6 +291,7 @@ constant
   :   HEX_LITERAL
   |   OCTAL_LITERAL
   |   DECIMAL_LITERAL
+  |   FLOATING_POINT_LITERAL
   ;
   
 assignment_operator

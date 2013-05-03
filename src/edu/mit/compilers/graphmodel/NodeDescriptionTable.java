@@ -12,17 +12,8 @@ public class NodeDescriptionTable {
     mTable = new ArrayList<String[]>();
   }
   
-  public void addRow(int[] row) {
-    String[] strRow = new String[ROW_LENGTH];
-    for (int i = 0; i < ROW_LENGTH; i++) {
-      if (row[i] < 0) {
-        strRow[i] = NAN;
-      } else {
-        strRow[i] = Integer.toString(row[i]);
-      }
-    }
-    
-    mTable.add(strRow);
+  public void addRow(String[] row) {
+    mTable.add(row);
   }
   
   public void addBranchRow(int op, String cond) {

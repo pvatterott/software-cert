@@ -16,7 +16,7 @@ public class OutputGenerator {
     Map<String, List<IrNode>> code = new HashMap<String, List<IrNode>>();
     
     for (IrFunctionDef fn : p.getFunctions()) {
-      String fnName = fn.getName();
+      String fnName = fn.getStrName();
       List<IrNode> unsimplifiedLinearRep = preparer.prepare(fn);
       List<IrNode> simplifiedLinearRep = simplifyLinearRep(unsimplifiedLinearRep);
       
@@ -42,7 +42,7 @@ public class OutputGenerator {
         String description = cond.getDescription();
         nodeDescriptions.addBranchRow(0, description);
       } else {
-        int[] desc = nDescriber.getNodeDescription(n);
+        String[] desc = nDescriber.getNodeDescription(n);
         nodeDescriptions.addRow(desc);
       }
     }

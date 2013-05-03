@@ -5,23 +5,36 @@ import javax.management.RuntimeErrorException;
 import edu.mit.compilers.IR.*;
 
 public class NodeDescriber implements IrNodeVisitor {
-  public final int IS_IDENTIFIER = 0;
-  public final int IS_LITERAL = 1;
   public final int ROW_LENGTH = 6;
   
-  private int[] mStore;
+  private String[] mStore;
   private int mCurrentIndex;
   private int mTarget;
   
-  public int[] getNodeDescription(IrNode n) {
-    mStore = new int[ROW_LENGTH];
+  public String[] getNodeDescription(IrNode n) {
+    mStore = new String[ROW_LENGTH];
     for (int i = 0; i < ROW_LENGTH; i++) {
-      mStore[i] = -1;
+      mStore[i] = "NaN";
     }
     
     mCurrentIndex = 0;
     n.accept(this);
     return mStore;
+  }
+  
+  public enum VarType {
+    IDENTIFIER(0),
+    INT_LITERAL(1),
+    DOUBLE_LITERAL(2);
+    
+    private final int mVal;
+    private VarType(int val) {
+      mVal = val;
+    }
+    
+    public int code() {
+      return mVal;
+    }
   }
   
   public enum Opcode {
@@ -45,7 +58,9 @@ public class NodeDescriber implements IrNodeVisitor {
     LT(17),
     GT(18),
     LEQ(19),
-    GEQ(20);
+    GEQ(20),
+    CAST_INT(21),
+    CAST_DOUBLE(22);
     
     private final int mVal;
     private Opcode(int val) {
@@ -62,21 +77,26 @@ public class NodeDescriber implements IrNodeVisitor {
   }
   
   private void addOpcode(Opcode op) {
-    mStore[nextIndex()] = op.code();
+    mStore[nextIndex()] = Integer.toString(op.code());
   }
   
   private void addTarget(int id) {
-    mStore[nextIndex()] = id;
+    mStore[nextIndex()] = Integer.toString(id);
   }
   
   private void addIdentifier(int val) {
-    mStore[nextIndex()] = IS_IDENTIFIER;
-    mStore[nextIndex()] = val;
+    mStore[nextIndex()] = Integer.toString(VarType.IDENTIFIER.code());
+    mStore[nextIndex()] = Integer.toString(val);
   }
   
   private void addLiteral(int val) {
-    mStore[nextIndex()] = IS_LITERAL;
-    mStore[nextIndex()] = val;
+    mStore[nextIndex()] = Integer.toString(VarType.INT_LITERAL.code());
+    mStore[nextIndex()] = Integer.toString(val);
+  }
+  
+  private void addLiteral(double val) {
+    mStore[nextIndex()] = Integer.toString(VarType.DOUBLE_LITERAL.code());
+    mStore[nextIndex()] = Double.toString(val);
   }
 
   @Override
@@ -87,13 +107,27 @@ public class NodeDescriber implements IrNodeVisitor {
     int id = target.getResultAddress();
     mTarget = id;
     
-    if (rhs instanceof IrBinOp) {
+    if (rhs instanceof IrBinOp || rhs instanceof IrCast) {
       rhs.accept(this);
     } else {
       addOpcode(Opcode.ASSIGN);
       addTarget(mTarget);
       rhs.accept(this);
     }
+  }
+  
+  @Override
+  public void visit(IrCast n) {
+    IrType res = n.getType();
+    IrType.Type t = res.getType();
+    if (t ==  IrType.Type.DOUBLE) {
+      addOpcode(Opcode.CAST_DOUBLE);
+    } else {
+      addOpcode(Opcode.CAST_INT);
+    }
+    IrExpression e = n.getExpression();
+    addTarget(mTarget);
+    e.accept(this);
   }
 
   @Override
@@ -152,8 +186,11 @@ public class NodeDescriber implements IrNodeVisitor {
 
   @Override
   public void visit(IrLiteral n) {
-    int val = n.getResultAddress();
-    addLiteral(val);
+    if (n.isDouble()) {
+      addLiteral(n.getDoubleVal());
+    } else {
+      addLiteral(n.getIntVal());
+    }
   }
 
   @Override
@@ -212,8 +249,31 @@ public class NodeDescriber implements IrNodeVisitor {
 
   @Override
   public void visit(IrRelationalOp n) {
-    // TODO Auto-generated method stub
-    throw new RuntimeErrorException(new Error());
+    switch (n.getOp()) {
+    case EQ:
+      addOpcode(Opcode.EQ);
+      break;
+    case NEQ:
+      addOpcode(Opcode.NEQ);
+      break;
+    case LT:
+      addOpcode(Opcode.LT);
+      break;
+    case GT:
+      addOpcode(Opcode.GT);
+      break;
+    case LEQ:
+      addOpcode(Opcode.LEQ);
+      break;
+    case GEQ:
+      addOpcode(Opcode.GEQ);
+      break;
+    }
+    
+    addTarget(mTarget);
+    
+    n.getLeft().accept(this);
+    n.getRight().accept(this);
   }
 
   @Override

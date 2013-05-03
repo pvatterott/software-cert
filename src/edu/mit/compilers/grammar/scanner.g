@@ -108,12 +108,12 @@ IntegerTypeSuffix
   | ('u'|'U')  ('l'|'L')?
   ;
 
-/*FLOATING_POINT_LITERAL
+FLOATING_POINT_LITERAL
     :   ('0'..'9')+ '.' ('0'..'9')* (Exponent)? (FloatTypeSuffix)?
-    |   '.' ('0'..'9')+ (Exponent)? (FloatTypeSuffix)?
-    |   ('0'..'9')+ (Exponent) (FloatTypeSuffix)?
-    |   ('0'..'9')+ (Exponent)? FloatTypeSuffix
-  ;*/
+    //|   '.' ('0'..'9')+ (Exponent)? (FloatTypeSuffix)?
+    //|   ('0'..'9')+ (Exponent) (FloatTypeSuffix)?
+    //|   ('0'..'9')+ (Exponent)? FloatTypeSuffix
+  ;
 
 //fragment
 protected
@@ -189,7 +189,7 @@ DEC : "--";
 LOG_AND : "&&";
 LOG_OR : "||";
 
-ARROW : "->";
+//ARROW : "->";
 
 BIN_AND : '&';
 BIN_OR : '|';
