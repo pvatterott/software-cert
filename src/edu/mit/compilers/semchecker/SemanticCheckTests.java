@@ -93,4 +93,90 @@ public class SemanticCheckTests {
       fail("Exception thrown: " + e.getMessage());
     }
   }
+  
+  @Test
+  public void test4() {
+    try {
+      SemanticChecker c = new SemanticChecker();
+      IrProgram p = getProg("int main() {" +
+                            "int a = 2, b = 3;" +
+                            "double c = 2.0;" +
+                            "c = foo(b);" +
+                            "return a; }" +
+                            "" +
+                            "int foo(int a) {" +
+                            "return 2 * a;" +
+                            "}");
+
+      assertFalse(c.check(p));
+
+    } catch (Exception e) {
+      fail("Exception thrown: " + e.getMessage());
+    }
+  }
+  
+  @Test
+  public void test5() {
+    try {
+      SemanticChecker c = new SemanticChecker();
+      IrProgram p = getProg("int main() {" +
+                            "int a = 2, b = 3;" +
+                            "double c = 2.0;" +
+                            "a = foo(b);" +
+                            "return a; }" +
+                            "" +
+                            "int foo(int a) {" +
+                            "return 2 * a;" +
+                            "}");
+
+      assertTrue(c.check(p));
+
+    } catch (Exception e) {
+      fail("Exception thrown: " + e.getMessage());
+    }
+  }
+  
+  @Test
+  public void test6() {
+    try {
+      SemanticChecker c = new SemanticChecker();
+      IrProgram p = getProg("int main() {" +
+                            "int a = 2, b = 3;" +
+                            "double c = 2.0;" +
+                            "a = foo(c);" +
+                            "return a; }" +
+                            "" +
+                            "int foo(int a) {" +
+                            "return 2 * a;" +
+                            "}");
+
+      assertFalse(c.check(p));
+
+    } catch (Exception e) {
+      fail("Exception thrown: " + e.getMessage());
+    }
+  }
+  
+  @Test
+  public void test7() {
+    try {
+      SemanticChecker c = new SemanticChecker();
+      IrProgram p = getProg("int main() {" +
+                            "int a = 2, b = 3;" +
+                            "double c = 2.0;" +
+                            "a = foo(b);" +
+                            "return a; }" +
+                            "" +
+                            "int foo(int a) {" +
+                            "double b;" +
+                            "b = a;" +
+                            "return 2 * a;" +
+                            "}");
+
+      assertFalse(c.check(p));
+
+    } catch (Exception e) {
+      fail("Exception thrown: " + e.getMessage());
+    }
+  }
 }

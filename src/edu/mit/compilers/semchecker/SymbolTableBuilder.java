@@ -33,6 +33,7 @@ public class SymbolTableBuilder extends SemanticCheck {
     IrType t = n.getType();
     IrIdentifier i = n.getName();
     mTable.addLiteralType(mCurrentFunction, i, t);
+    mTable.addFunctionParamType(mCurrentFunction, t);
   }
   
   @Override

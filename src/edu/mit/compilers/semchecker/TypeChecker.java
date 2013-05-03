@@ -1,5 +1,7 @@
 package edu.mit.compilers.semchecker;
 
+import java.util.List;
+
 import edu.mit.compilers.IR.*;
 import edu.mit.compilers.IR.IrType.Type;
 
@@ -36,9 +38,31 @@ public class TypeChecker extends SemanticCheck {
   }
   
   @Override
+  public void visit(IrExtFunctionCall n) {
+    IrIdentifier fnName = n.getName();
+    IrType expected, actual;
+    List<IrExpression> params = n.getParams();
+    IrExpression param;
+    int numParams = params.size();
+    
+    String err = "Illegal parameter type in call to " + fnName;
+    
+    for (int i = 0; i < numParams; i++) {
+      param = params.get(i);
+      param.accept(this);
+      expected = mTable.getFunctionParamType(fnName, i);
+      actual = param.getType(mTable, mCurrentFunction);
+      typeCheck(expected, actual, err);
+    }
+  }
+  
+  @Override
   public void visit(IrAssignment n) {
     IrIdentifier lhs = n.getTarget();
     IrExpression rhs = n.getValue();
+    lhs.accept(this);
+    rhs.accept(this);
+    
     IrType expected = mTable.getLiteralType(mCurrentFunction, lhs);
     IrType actual = rhs.getType(mTable, mCurrentFunction);
     
@@ -49,6 +73,7 @@ public class TypeChecker extends SemanticCheck {
   @Override
   public void visit(IrReturn n) {
     IrExpression exp = n.getExpr();
+    exp.accept(this);
     IrType expected = mTable.getFunctionReturnType(mCurrentFunction);
     
     if (expected.equals(new IrType(Type.VOID))) {
