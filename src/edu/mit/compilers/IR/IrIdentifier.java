@@ -2,7 +2,7 @@ package edu.mit.compilers.IR;
 
 import edu.mit.compilers.semchecker.SymbolTable;
 
-public class IrIdentifier extends IrExpression implements IrCondExpression {
+public class IrIdentifier extends IrExpression {
   private String mName;
   private int mAddrOfResult;
   
@@ -45,11 +45,6 @@ public class IrIdentifier extends IrExpression implements IrCondExpression {
     copy.setResultAddress(mAddrOfResult);
     copy.setNextInstr(getNextInstr());
     return copy;
-  }
-
-  @Override
-  public String getDescription() {
-    return Integer.toString(mAddrOfResult);
   }
 
   @Override

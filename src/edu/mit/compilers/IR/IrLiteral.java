@@ -3,7 +3,7 @@ package edu.mit.compilers.IR;
 import edu.mit.compilers.IR.IrType.Type;
 import edu.mit.compilers.semchecker.SymbolTable;
 
-public class IrLiteral extends IrExpression implements IrCondExpression {
+public class IrLiteral extends IrExpression {
   private int mIntVal;
   private double mDoubleVal;
   private boolean mIsDouble;
@@ -68,11 +68,6 @@ public class IrLiteral extends IrExpression implements IrCondExpression {
     } else {
       return new IrLiteral(mIntVal);
     }
-  }
-
-  @Override
-  public String getDescription() {
-    return "$" + this.toString();
   }
 
   @Override

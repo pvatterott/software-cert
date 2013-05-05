@@ -35,16 +35,9 @@ public class OutputGenerator {
     AdjacenyMatrix adj = getAdjacencyMatrix(program);
     NodeDescriptionTable nodeDescriptions = new NodeDescriptionTable();
     
-    //int i = 0;
     for (IrNode n : program) {
-      if (n instanceof IrBranch) {
-        IrCondExpression cond = ((IrBranch) n).getCond();
-        String description = cond.getDescription();
-        nodeDescriptions.addBranchRow(0, description);
-      } else {
-        String[] desc = nDescriber.getNodeDescription(n);
-        nodeDescriptions.addRow(desc);
-      }
+      String[] desc = nDescriber.getNodeDescription(n);
+      nodeDescriptions.addRow(desc);
     }
     
     GraphPrinter.print(adj, nodeDescriptions);

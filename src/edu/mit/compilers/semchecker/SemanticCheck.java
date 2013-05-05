@@ -1,28 +1,6 @@
 package edu.mit.compilers.semchecker;
 
-import edu.mit.compilers.IR.IrAssignment;
-import edu.mit.compilers.IR.IrBinOp;
-import edu.mit.compilers.IR.IrBranch;
-import edu.mit.compilers.IR.IrCast;
-import edu.mit.compilers.IR.IrDeclaration;
-import edu.mit.compilers.IR.IrExpression;
-import edu.mit.compilers.IR.IrExtFunctionCall;
-import edu.mit.compilers.IR.IrFor;
-import edu.mit.compilers.IR.IrFunctionDef;
-import edu.mit.compilers.IR.IrIdentifier;
-import edu.mit.compilers.IR.IrIf;
-import edu.mit.compilers.IR.IrLabel;
-import edu.mit.compilers.IR.IrLiteral;
-import edu.mit.compilers.IR.IrLogicalOp;
-import edu.mit.compilers.IR.IrNode;
-import edu.mit.compilers.IR.IrNodeVisitor;
-import edu.mit.compilers.IR.IrParam;
-import edu.mit.compilers.IR.IrProgram;
-import edu.mit.compilers.IR.IrRedacted;
-import edu.mit.compilers.IR.IrRelationalOp;
-import edu.mit.compilers.IR.IrReturn;
-import edu.mit.compilers.IR.IrType;
-import edu.mit.compilers.IR.IrWhile;
+import edu.mit.compilers.IR.*;
 
 abstract public class SemanticCheck implements IrNodeVisitor{
   protected boolean mFailed;
@@ -51,16 +29,6 @@ abstract public class SemanticCheck implements IrNodeVisitor{
   
   public void visit(IrBranch n) {
     n.getCond().accept(this);
-  }
-  
-  public void visit(IrRelationalOp n) {
-    n.getLeft().accept(this);
-    n.getRight().accept(this);
-  }
-  
-  public void visit(IrLogicalOp n) {
-    n.getLeft().accept(this);
-    n.getRight().accept(this);
   }
   
   public void visit(IrDeclaration n) {

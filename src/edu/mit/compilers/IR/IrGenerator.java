@@ -64,7 +64,7 @@ public class IrGenerator {
       
     case CParserTokenTypes.TK_while:
       next = ast.getFirstChild();
-      IrCondExpression expr = (IrCondExpression)getIr(next);
+      IrExpression expr = (IrExpression)getIr(next);
       outIr = new IrWhile(expr);
       
       next = next.getNextSibling();
@@ -82,7 +82,7 @@ public class IrGenerator {
       IrNode initializer = getIr(next);
       
       next = next.getNextSibling();
-      expr = (IrCondExpression)getIr(next);
+      expr = (IrExpression)getIr(next);
       
       next = next.getNextSibling();
       IrNode update = getIr(next);
@@ -101,7 +101,7 @@ public class IrGenerator {
       
     case CParserTokenTypes.TK_if:
       next = ast.getFirstChild();
-      IrCondExpression cond = (IrCondExpression)getIr(next);
+      IrExpression cond = (IrExpression)getIr(next);
       IrIf ifStmt = new IrIf(cond);
       
       next = next.getNextSibling();
@@ -215,49 +215,49 @@ public class IrGenerator {
     case CParserTokenTypes.LT:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createRelOp(IrRelationalOp.RelOpType.LT, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.LT, lhs, rhs);
       break;
       
     case CParserTokenTypes.GT:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createRelOp(IrRelationalOp.RelOpType.GT, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.GT, lhs, rhs);
       break;
       
     case CParserTokenTypes.LEQ:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createRelOp(IrRelationalOp.RelOpType.LEQ, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.LEQ, lhs, rhs);
       break;
       
     case CParserTokenTypes.GEQ:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createRelOp(IrRelationalOp.RelOpType.GEQ, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.GEQ, lhs, rhs);
       break;
       
     case CParserTokenTypes.EQ:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createRelOp(IrRelationalOp.RelOpType.EQ, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.EQ, lhs, rhs);
       break;
       
     case CParserTokenTypes.NEQ:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createRelOp(IrRelationalOp.RelOpType.NEQ, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.NEQ, lhs, rhs);
       break;
       
     case CParserTokenTypes.LOG_OR:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createLogOp(IrLogicalOp.LogOpType.OR, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.OR, lhs, rhs);
       break;
       
     case CParserTokenTypes.LOG_AND:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
-      outIr = createLogOp(IrLogicalOp.LogOpType.AND, lhs, rhs);
+      outIr = createBinOp(IrBinOp.BinOpType.AND, lhs, rhs);
       break;
       
     case CParserTokenTypes.FN_CALL:
@@ -363,17 +363,5 @@ public class IrGenerator {
     IrExpression leftExpr = (IrExpression)getIr(lhs);
     IrExpression righExpr = (IrExpression)getIr(rhs);
     return new IrBinOp(leftExpr, op, righExpr);
-  }
-  
-  private static IrRelationalOp createRelOp(IrRelationalOp.RelOpType op, AST lhs, AST rhs) {
-    IrExpression leftExpr = (IrExpression)getIr(lhs);
-    IrExpression righExpr = (IrExpression)getIr(rhs);
-    return new IrRelationalOp(leftExpr, op, righExpr);
-  }
-  
-  private static IrLogicalOp createLogOp(IrLogicalOp.LogOpType op, AST lhs, AST rhs) {
-    IrCondExpression leftExpr = (IrCondExpression)getIr(lhs);
-    IrCondExpression righExpr = (IrCondExpression)getIr(rhs);
-    return new IrLogicalOp(leftExpr, op, righExpr);
   }
 }

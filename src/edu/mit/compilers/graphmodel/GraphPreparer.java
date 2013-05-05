@@ -199,7 +199,7 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrWhile n) {
-    IrCondExpression cond = n.getCond();
+    IrExpression cond = n.getCond();
     int beginNum = getNextLabel();
     IrLabel wBegin = new IrLabel(beginNum, LabelType.WBEGIN);
     mInstructions.add(wBegin);
@@ -228,7 +228,7 @@ public class GraphPreparer implements IrNodeVisitor {
   @Override
   public void visit(IrFor n) {
     IrNode init = n.getInitializer();
-    IrCondExpression cond = n.getCondition();
+    IrExpression cond = n.getCondition();
     IrNode update = n.getUpdate();
 
     int beginNum = getNextLabel();
@@ -267,7 +267,7 @@ public class GraphPreparer implements IrNodeVisitor {
 
   @Override
   public void visit(IrIf n) {
-    IrCondExpression cond = n.getCond();
+    IrExpression cond = n.getCond();
     cond.accept(this);
 
     int trueNum = getNextLabel();
@@ -317,29 +317,8 @@ public class GraphPreparer implements IrNodeVisitor {
   }
 
   @Override
-  public void visit(IrRelationalOp n) {
-    IrExpression oldLeft, oldRight, newLeft, newRight;
-    oldLeft = n.getLeft();
-    oldRight = n.getRight();
-    oldLeft.accept(this);
-    oldRight.accept(this);
-    newLeft = getSimplified(oldLeft);
-    newRight = getSimplified(oldRight);
-    n.setLeft(newLeft);
-    n.setRight(newRight);
-  }
-
-  @Override
-  public void visit(IrLogicalOp n) {
-    n.getLeft().accept(this);
-    n.getRight().accept(this);
-  }
-
-  @Override
   public void visit(IrParam n) {
     n.getName().accept(this);
   }
-
-
-
+  
 }

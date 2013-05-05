@@ -2,10 +2,10 @@ package edu.mit.compilers.IR;
 
 public class IrFor extends IrNode {
   private IrNode mInitializer;
-  private IrCondExpression mCond;
+  private IrExpression mCond;
   private IrNode mUpdate;
   
-  public IrFor(IrNode initializer, IrCondExpression cond, IrNode update) {
+  public IrFor(IrNode initializer, IrExpression cond, IrNode update) {
     mInitializer = initializer;
     mCond = cond;
     mUpdate = update;
@@ -15,7 +15,7 @@ public class IrFor extends IrNode {
     return mInitializer;
   }
   
-  public IrCondExpression getCondition() {
+  public IrExpression getCondition() {
     return mCond;
   }
   

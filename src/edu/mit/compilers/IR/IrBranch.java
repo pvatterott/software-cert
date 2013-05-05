@@ -1,10 +1,10 @@
 package edu.mit.compilers.IR;
 
 public class IrBranch extends IrNode {
-  private IrCondExpression mCondition;
+  private IrExpression mCondition;
   private int mTrueBranch, mFalseBranch;
   
-  public IrBranch(IrCondExpression cond) {
+  public IrBranch(IrExpression cond) {
     mCondition = cond;
   }
 
@@ -24,7 +24,7 @@ public class IrBranch extends IrNode {
     return mFalseBranch;
   }
   
-  public IrCondExpression getCond() {
+  public IrExpression getCond() {
     return mCondition;
   }
   
@@ -35,7 +35,7 @@ public class IrBranch extends IrNode {
 
   @Override
   public IrNode copy() {
-    IrCondExpression cond = (IrCondExpression)mCondition.copy();
+    IrExpression cond = (IrExpression)mCondition.copy();
     IrBranch out = new IrBranch(cond);
     out.setFalseBranch(mFalseBranch);
     out.setTrueBranch(mTrueBranch);

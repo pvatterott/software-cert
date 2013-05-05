@@ -1,7 +1,5 @@
 package edu.mit.compilers.graphmodel;
 
-import javax.management.RuntimeErrorException;
-
 import edu.mit.compilers.IR.*;
 
 public class NodeDescriber implements IrNodeVisitor {
@@ -154,6 +152,30 @@ public class NodeDescriber implements IrNodeVisitor {
     case SUB:
       addOpcode(Opcode.SUB);
       break;
+    case AND:
+      addOpcode(Opcode.LOG_AND);
+      break;
+    case OR:
+      addOpcode(Opcode.LOG_OR);
+      break;
+    case EQ:
+      addOpcode(Opcode.EQ);
+      break;
+    case GEQ:
+      addOpcode(Opcode.GEQ);
+      break;
+    case GT:
+      addOpcode(Opcode.GT);
+      break;
+    case LEQ:
+      addOpcode(Opcode.LEQ);
+      break;
+    case LT:
+      addOpcode(Opcode.LT);
+      break;
+    case NEQ:
+      addOpcode(Opcode.NEQ);
+      break;
     }
     
     addTarget(mTarget);
@@ -169,8 +191,7 @@ public class NodeDescriber implements IrNodeVisitor {
 
   @Override 
   public void visit(IrExtFunctionCall n) {
-    // TODO Auto-generated method stub
-
+    // Not relevant
   }
 
   @Override
@@ -234,52 +255,15 @@ public class NodeDescriber implements IrNodeVisitor {
     // Not relevant
   }
 
-
   @Override
   public void visit(IrBranch n) {
-    /*addOpcode(Opcode.BRANCH);
+    addOpcode(Opcode.BRANCH);
     IrExpression cond = n.getCond();
     if (cond instanceof IrBinOp) {
       addIdentifier(cond.getResultAddress());
     } else {
       cond.accept(this);
-    }*/
-    throw new RuntimeErrorException(new Error());
-  }
-
-  @Override
-  public void visit(IrRelationalOp n) {
-    switch (n.getOp()) {
-    case EQ:
-      addOpcode(Opcode.EQ);
-      break;
-    case NEQ:
-      addOpcode(Opcode.NEQ);
-      break;
-    case LT:
-      addOpcode(Opcode.LT);
-      break;
-    case GT:
-      addOpcode(Opcode.GT);
-      break;
-    case LEQ:
-      addOpcode(Opcode.LEQ);
-      break;
-    case GEQ:
-      addOpcode(Opcode.GEQ);
-      break;
     }
-    
-    addTarget(mTarget);
-    
-    n.getLeft().accept(this);
-    n.getRight().accept(this);
-  }
-
-  @Override
-  public void visit(IrLogicalOp n) {
-    // TODO Auto-generated method stub
-    throw new RuntimeErrorException(new Error());
   }
 
   @Override

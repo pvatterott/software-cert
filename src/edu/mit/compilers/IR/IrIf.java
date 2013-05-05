@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IrIf extends IrNode {
-  private IrCondExpression mExpr;
+  private IrExpression mExpr;
   private List<IrNode> mSatisfied;
   private List<IrNode> mUnsatisfied;
   private boolean mHasElse;
   
-  public IrIf(IrCondExpression expr) {
+  public IrIf(IrExpression expr) {
     mExpr = expr;
     mSatisfied = new ArrayList<IrNode>();
     mUnsatisfied = new ArrayList<IrNode>();
@@ -24,7 +24,7 @@ public class IrIf extends IrNode {
     mUnsatisfied.add(child);
   }
   
-  public IrCondExpression getCond() {
+  public IrExpression getCond() {
     return mExpr;
   }
   
