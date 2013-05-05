@@ -78,9 +78,10 @@ public class IrBinOp extends IrExpression {
     IrType lType = mLeft.getType(table, currentFunction);
     IrType rType = mRight.getType(table, currentFunction);
     if (lType.equals(rType)) {
-      return lType;
+      mType = lType;
     } else {
-      return new IrType(IrType.Type.VOID);
+      mType = new IrType(IrType.Type.VOID);
     }
+    return mType;
   }
 }

@@ -49,7 +49,8 @@ public class IrIdentifier extends IrExpression {
 
   @Override
   public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
-    return table.getLiteralType(currentFunction, this);
+    mType = table.getLiteralType(currentFunction, this);
+    return mType;
   }
   
   @Override

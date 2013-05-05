@@ -68,6 +68,7 @@ public class IrExtFunctionCall extends IrExpression {
 
   @Override
   public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
-    return table.getFunctionReturnType(mFnName);
+    mType = table.getFunctionReturnType(mFnName);
+    return mType;
   }
 }

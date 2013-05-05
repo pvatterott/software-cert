@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 import edu.mit.compilers.IR.*;
+import edu.mit.compilers.IR.IrBinOp.BinOpType;
 import edu.mit.compilers.IR.IrLabel.LabelType;
+import edu.mit.compilers.IR.IrType.Type;
 
 public class GraphPreparer implements IrNodeVisitor {
   private List<IrNode> mInstructions;
@@ -81,9 +83,43 @@ public class GraphPreparer implements IrNodeVisitor {
     newLeft = getSimplified(oldLeft);
     newRight = getSimplified(oldRight);
     
-    newOp = new IrBinOp(newLeft, n.getOp(), newRight);
+    if (n.getOp() == BinOpType.LT || n.getOp() == BinOpType.GT) {
+      newOp = simplifyLtGt(newLeft, n, newRight);
+    } else {
+      newOp = new IrBinOp(newLeft, n.getOp(), newRight);
+    }
     tempAssign = new IrAssignment(newTarget, newOp);
     mInstructions.add(tempAssign);
+  }
+  
+  public IrBinOp simplifyLtGt(IrExpression lhs, IrBinOp n, IrExpression rhs) {
+    // a < b is the same as a <= b - 1 if a and b are ints
+    // a < b is the same as a < b if a and b are doubles
+    IrBinOp.BinOpType cmpOp;
+    IrBinOp.BinOpType adjustOp;
+    if (n.getOp() == BinOpType.LT) {
+      cmpOp = BinOpType.LEQ;
+      adjustOp = BinOpType.SUB;
+    } else {
+      cmpOp = BinOpType.GEQ;
+      adjustOp = BinOpType.ADD;
+    }
+    
+    IrType t = n.getCachedType();
+    if (t.getType() == Type.DOUBLE) {
+      return new IrBinOp(lhs, cmpOp, rhs);
+    } else { // INT
+      IrLiteral one = new IrLiteral(1);
+      IrBinOp minusRhs = new IrBinOp(rhs, adjustOp, one);
+      int newAddr = getNextID();
+      IrIdentifier newTemp = new IrIdentifier();
+      newTemp.setResultAddress(newAddr);
+      IrAssignment assTemp = new IrAssignment(newTemp, minusRhs);
+      mInstructions.add(assTemp);
+      
+      IrBinOp out = new IrBinOp(lhs, cmpOp, newTemp);
+      return out;
+    }
   }
   
   @Override

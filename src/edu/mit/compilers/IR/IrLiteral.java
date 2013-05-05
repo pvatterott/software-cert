@@ -73,9 +73,10 @@ public class IrLiteral extends IrExpression {
   @Override
   public IrType getType(SymbolTable table, IrIdentifier currentFunction) {
     if (mIsDouble) {
-      return new IrType(Type.DOUBLE);
+      mType = new IrType(Type.DOUBLE);
     } else {
-      return new IrType(Type.INT);
+      mType = new IrType(Type.INT);
     }
+    return mType;
   }
 }
