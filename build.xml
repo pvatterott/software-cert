@@ -78,7 +78,9 @@
 
   <target name="compile" depends="parser">
     <javac srcdir="${autogen}:${src}" destdir="${classes}"
-           debug="on" includeantruntime="false">
+           debug="on" includeantruntime="false"
+					 excludes="${src}/${base_package_dir}/semchecker/SemanticCheckTests.java"
+					 >
       <classpath refid="libraries" />
     </javac>
   </target>

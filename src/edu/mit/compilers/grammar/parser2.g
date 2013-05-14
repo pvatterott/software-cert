@@ -9,7 +9,7 @@ options
 }
 
 class CParser extends Parser;
-options
+options 
 {
   importVocab = CScanner;
   k = 3;
@@ -81,12 +81,8 @@ tokens
 }
 
 program
-  : (external_declaration)+
+  : (function_definition)+
   { #program = #([PROGRAM, "program"], #program); }
-  ;
-  
-external_declaration
-  : function_definition
   ;
   
 function_definition
@@ -117,10 +113,10 @@ parameter_declaration
 compound_statement
   : LBRACE! (declaration)* (statement)* RBRACE!
     { #compound_statement = #([BLOCK, "block"], #compound_statement); }
-  ;
+  ; 
   
 declaration
-  : type_name (init_declarator_list)? SEMI!
+  : type_name (init_declarator_list)? SEMI! (RANGE_SPECIFIER)?
   { #declaration = #([DECLARATION, "dec"], #declaration); }
   ;
   
@@ -150,8 +146,7 @@ declarator_suffix
   ;
   
 initializer
-  : additive_expression
-  //| LBRACE! initializer_list (COMMA!)? RBRACE!
+  : constant
   ;
 
 /*initializer_list
@@ -169,6 +164,10 @@ expression_statement
   : (expression)? SEMI!
   ;
   
+logical_or_statement
+  : (logical_or_expression)? SEMI!
+  ;
+  
 jump_statement
   : TK_goto^ IDENTIFIER SEMI!
   | TK_continue^ SEMI!
@@ -177,13 +176,13 @@ jump_statement
   ;
   
 iteration_statement
-  : TK_while^ LPAREN! conditional_expression RPAREN! body 
+  : TK_while^ LPAREN! logical_or_expression RPAREN! body 
   //| TK_do^ sub_block TK_while LPAREN! expression RPAREN! SEMI!
-  | TK_for^ LPAREN! expression_statement cond_expression_statement (expression)? RPAREN! body
+  | TK_for^ LPAREN! expression_statement logical_or_statement (expression)? RPAREN! body
   ;
   
 selection_statement
-  : TK_if^ LPAREN! conditional_expression RPAREN! body (TK_else! body)?
+  : TK_if^ LPAREN! logical_or_expression RPAREN! body (TK_else! body)?
   //| TK_switch^ LPAREN! expression RPAREN! statement_list
   ;
 
@@ -194,12 +193,20 @@ body
   
 expression
   : (IDENTIFIER assignment_operator)=>assignment_expression
-  | relational_expression
+  | logical_or_expression
   ;
   
 assignment_expression!
-  : assignee:IDENTIFIER op:assignment_operator assignment:relational_expression
+  : assignee:IDENTIFIER op:assignment_operator assignment:logical_or_expression
     { #assignment_expression = #(op, assignee, assignment); }
+  ;
+  
+logical_or_expression
+  : logical_and_expression (LOG_OR^ logical_and_expression)*
+  ;
+
+logical_and_expression
+  : relational_expression (LOG_AND^ relational_expression)*
   ;
   
 relational_expression
@@ -228,53 +235,6 @@ primary_expression
   : IDENTIFIER
   | constant
   | LPAREN! relational_expression RPAREN!
-  | fn_call
-  ;
-  
-// ----
-
-cond_expression_statement
-  : (conditional_expression)? SEMI!
-  ;
-  
-conditional_expression
-  : logical_or_expression_2
-  ;
-
-logical_or_expression_2
-  : logical_and_expression_2 (LOG_OR^ logical_and_expression_2)*
-  ;
-
-logical_and_expression_2
-  : relational_expression_2 (LOG_AND^ relational_expression_2)*
-  ;
-
-relational_expression_2
-  : shift_expression_2 ((LT^|GT^|LEQ^|GEQ^|EQ^|NEQ^) shift_expression_2)+
-  ;
-
-shift_expression_2
-  : additive_expression_2 ((SHL^|SHR^) additive_expression_2)*
-  ;
-  
-additive_expression_2
-  : (multiplicative_expression_2) (PLUS^ multiplicative_expression_2 | MINUS^ multiplicative_expression_2)*
-  ;
-
-multiplicative_expression_2
-  : (cast_expression_2) (ASTERISK^ cast_expression_2 | DIV^ cast_expression_2)*
-  ;
-  
-cast_expression_2
-  : LPAREN! type_name RPAREN! cast_expression_2
-    { #cast_expression_2 = #([CAST, "cast"], #cast_expression_2); }
-  | primary_expression_2
-  ;
-  
-primary_expression_2
-  : IDENTIFIER
-  | constant
-  | LPAREN! conditional_expression RPAREN!
   | fn_call
   ;
   

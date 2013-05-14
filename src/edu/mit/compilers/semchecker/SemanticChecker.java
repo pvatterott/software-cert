@@ -7,18 +7,22 @@ import edu.mit.compilers.IR.IrProgram;
 
 public class SemanticChecker {
   List<SemanticCheck> mChecks;
+  SymbolTable mSymbolTable;
   
   public SemanticChecker() {
     mChecks = new ArrayList<SemanticCheck>();
     mChecks.add(new TypeChecker());
   }
   
+  public SymbolTable getSymbolTable() {
+    return mSymbolTable;
+  }
+  
   public boolean check(IrProgram p) {
     SymbolTableBuilder builder = new SymbolTableBuilder();
-    SymbolTable symbolTable;
     
     try {
-      symbolTable = builder.getTable(p);
+      mSymbolTable = builder.getTable(p);
     } catch (CheckException e) {
       System.out.println(e.getMessage());
       return false;
@@ -27,7 +31,7 @@ public class SemanticChecker {
     for (SemanticCheck check : mChecks) {
       boolean result;
       try {
-        result = check.check(p, symbolTable);
+        result = check.check(p, mSymbolTable);
       } catch (CheckException e) {
         System.out.println(e.getMessage());
         return false;

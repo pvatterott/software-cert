@@ -39,8 +39,6 @@ public class IrBinOp extends IrExpression {
     GT,
     LEQ,
     GEQ,
-		RIGHT_SHIFT,
-		LEFT_SHIFT,
 	}
 	
   @Override

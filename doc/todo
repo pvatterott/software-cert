@@ -24,23 +24,13 @@
 
 *Better Language Spec
 
-*Multiple literal types in nodes file
-
-allow a = b < c again
-for
-double
 document
 switch
 ---------------------------------------------------------
-Eliminate LT, GT
-
-Double comparison => LT = LEQ, GT = GEQ
-Int comparison => a + 1 <= b
-
-Revert conditional expressions
-
-Annotate variables with probable range
 Specify default range at top of the file
 
-Talk to Kenny
 Inference of type range
+
+Possible division by 0 -> set range to infinite, display warning to user
+
+[0, 1] => [0, Inf]

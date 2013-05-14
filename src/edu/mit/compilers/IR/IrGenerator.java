@@ -200,18 +200,6 @@ public class IrGenerator {
       outIr = createBinOp(IrBinOp.BinOpType.MOD, lhs, rhs);
       break;
       
-    case CParserTokenTypes.SHL:
-      lhs = ast.getFirstChild();
-      rhs = lhs.getNextSibling();
-      outIr = createBinOp(IrBinOp.BinOpType.LEFT_SHIFT, lhs, rhs);
-      break;
-      
-    case CParserTokenTypes.SHR:
-      lhs = ast.getFirstChild();
-      rhs = lhs.getNextSibling();
-      outIr = createBinOp(IrBinOp.BinOpType.RIGHT_SHIFT, lhs, rhs);
-      break;
-      
     case CParserTokenTypes.LT:
       lhs = ast.getFirstChild();
       rhs = lhs.getNextSibling();
@@ -322,11 +310,30 @@ public class IrGenerator {
       next = ast.getFirstChild();
       type = (IrType)getIr(next);
       
-      outIr = new IrDeclaration(type);
+      IrDeclaration dec = new IrDeclaration(type);
       while ((next = next.getNextSibling()) != null) {
-        IrNode declared = getIr(next);
-        outIr.addChild(declared);
+        if (next.getType() == CParserTokenTypes.RANGE_SPECIFIER) {
+          String text = next.getText();
+          text = text.substring(3, text.length()); // Trim off //#
+          text = text.trim();
+          String[] bounds = text.split(":");
+          if (bounds.length != 2) {
+            throw new RuntimeException("Range specifier not correctly formatted");
+          }
+          int lower, upper;
+          try {
+            lower = Integer.parseInt(bounds[0]);
+            upper = Integer.parseInt(bounds[1]);
+          } catch (NumberFormatException e) {
+            throw new RuntimeException("Range specifier not correctly formatted");
+          }
+          dec.setRange(lower, upper);
+        } else {
+          IrNode declared = getIr(next);
+          dec.addChild(declared);
+        }
       }
+      outIr = dec;
       break;
       
     case CParserTokenTypes.TK_int:

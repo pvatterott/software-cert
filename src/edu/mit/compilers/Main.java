@@ -7,6 +7,7 @@ import edu.mit.compilers.IR.*;
 import edu.mit.compilers.grammar.*;
 import edu.mit.compilers.graphmodel.*;
 import edu.mit.compilers.semchecker.SemanticChecker;
+import edu.mit.compilers.semchecker.SymbolTable;
 import edu.mit.compilers.tools.CLI;
 import edu.mit.compilers.tools.CLI.Action;
 import edu.mit.compilers.tools.TreeVisualizer;
@@ -57,12 +58,14 @@ class Main {
           System.out.println("ERROR");
           System.exit(-1);
         }
-        SemanticChecker checker = new SemanticChecker();
-        OutputGenerator gen = new OutputGenerator();
-        
         IrProgram cfg = (IrProgram)IrGenerator.getIr(parser.getAST());
+        
+        SemanticChecker checker = new SemanticChecker();
         checker.check(cfg);
-        gen.generate(cfg);
+        SymbolTable table = checker.getSymbolTable();
+        
+        OutputGenerator gen = new OutputGenerator();
+        gen.generate(cfg, table);
       } else {
         System.out.println("Unsupported target");
       }

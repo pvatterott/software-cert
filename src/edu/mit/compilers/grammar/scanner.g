@@ -6,7 +6,7 @@ options
 {
   mangleLiteralPrefix = "TK_";
   language = "Java";
-}
+} 
 
 {@SuppressWarnings("unchecked")}
 class CScanner extends Lexer;
@@ -146,7 +146,11 @@ UnicodeEscape
 
 WS_ : (' ' | '\n' {newline();} | '\t' | '\r') {_ttype = Token.SKIP; };
 
-SL_COMMENT : "//" (~'\n')* '\n' {_ttype = Token.SKIP; newline (); };
+RANGE_SPECIFIER : "//#" (~'\n')* '\n' {newline();};
+
+SL_COMMENT : "//" (~('\n'|'#')) (~'\n')* '\n' {_ttype = Token.SKIP; newline (); };
+
+BLANK_COMMENT : "//\n" {_ttype = Token.SKIP; newline (); };
 
 ML_COMMENT : "/*"
      (

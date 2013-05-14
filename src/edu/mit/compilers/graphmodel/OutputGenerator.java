@@ -3,13 +3,16 @@ package edu.mit.compilers.graphmodel;
 import java.util.*;
 
 import edu.mit.compilers.IR.*;
+import edu.mit.compilers.semchecker.SymbolTable;
 
 public class OutputGenerator {
   
-  public void generate(IrProgram p) {
+  public void generate(IrProgram p, SymbolTable symbolTable) {
     GraphPreparer preparer = new GraphPreparer();
     NodeDescriber nDescriber = new NodeDescriber();
     FunctionInliner inliner = new FunctionInliner();
+    RangeAssigner assigner = new RangeAssigner();
+    RangePropagator propagator = new RangePropagator();
     
     List<IrNode> program;
     Map<String, IrFunctionDef> defs = new HashMap<String, IrFunctionDef>();
@@ -17,8 +20,10 @@ public class OutputGenerator {
     
     for (IrFunctionDef fn : p.getFunctions()) {
       String fnName = fn.getStrName();
+      IrIdentifier name = fn.getName();
       List<IrNode> unsimplifiedLinearRep = preparer.prepare(fn);
       List<IrNode> simplifiedLinearRep = simplifyLinearRep(unsimplifiedLinearRep);
+      assigner.propagate(simplifiedLinearRep, name, symbolTable);
       
       defs.put(fnName, fn);
       code.put(fnName, simplifiedLinearRep);
@@ -26,11 +31,7 @@ public class OutputGenerator {
     
     program = inliner.inline(defs, code);
     
-    /*int i = 0;
-    for (IrNode n : program) {
-      System.out.print(i++ + ":\t");
-      System.out.println(n);
-    }*/
+    propagator.propagate(program, symbolTable);
     
     AdjacenyMatrix adj = getAdjacencyMatrix(program);
     NodeDescriptionTable nodeDescriptions = new NodeDescriptionTable();
@@ -40,6 +41,7 @@ public class OutputGenerator {
       nodeDescriptions.addRow(desc);
     }
     
+    GraphPrinter.printRanges(propagator.getBounds());
     GraphPrinter.print(adj, nodeDescriptions);
   }
   

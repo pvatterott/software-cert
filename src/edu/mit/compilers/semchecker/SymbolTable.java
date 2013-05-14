@@ -6,16 +6,21 @@ import java.util.HashMap;
 
 import edu.mit.compilers.IR.IrIdentifier;
 import edu.mit.compilers.IR.IrType;
+import edu.mit.compilers.graphmodel.Bound;
 
 public class SymbolTable {
   Map<IrIdentifier, Map<IrIdentifier, IrType>> mLiteralDefs;
   Map<IrIdentifier, IrType> mFunctionReturnTypes;
   Map<IrIdentifier, List<IrType>> mFunctionParamTypes;
+  Map<IrIdentifier, Map<IrIdentifier, Bound>> mBounds;
+  
+  Bound mDefaultBound;
   
   public SymbolTable() {
     mLiteralDefs = new HashMap<IrIdentifier, Map<IrIdentifier,IrType>>();
     mFunctionReturnTypes = new HashMap<IrIdentifier, IrType>();
     mFunctionParamTypes = new HashMap<IrIdentifier, List<IrType>>();
+    mBounds = new HashMap<IrIdentifier, Map<IrIdentifier,Bound>>();
   }
   
   public void addFunctionParamType(IrIdentifier function, IrType type) {
@@ -47,6 +52,21 @@ public class SymbolTable {
     map.put(var, type);
   }
   
+  public void addBounds(IrIdentifier function, IrIdentifier var, Bound bound) {
+    Map<IrIdentifier,Bound> map = mBounds.get(function);
+    if (map == null) {
+      map = new HashMap<IrIdentifier, Bound>();
+      mBounds.put(function, map);
+    }
+      
+    if (map.containsKey(var)) {
+      throw new CheckException("Multiple Definition of \'" + var.getName()
+                               + "\' in \'" + function.getName() + "\'");
+    }
+   
+    map.put(var, bound);
+  }
+  
   public IrType getLiteralType(IrIdentifier function, IrIdentifier var) {
     Map<IrIdentifier,IrType> map = mLiteralDefs.get(function);
     if (map == null)
@@ -65,4 +85,25 @@ public class SymbolTable {
   public IrType getFunctionReturnType(IrIdentifier function) {
     return mFunctionReturnTypes.get(function);
   }
+  
+  public boolean containsBoundsFor(IrIdentifier function, IrIdentifier var) {
+    Map<IrIdentifier,Bound> map = mBounds.get(function);
+    if (map == null) {
+      return false;
+    }
+    return map.containsKey(var);
+  }
+  
+  public Bound getBounds(IrIdentifier function, IrIdentifier var) {
+    Map<IrIdentifier,Bound> map = mBounds.get(function);
+    if (map == null)
+      return mDefaultBound;
+    
+    return map.get(var);
+  }
+  
+  public Bound getDefaultBound() {
+    return mDefaultBound;
+  }
+  
 }

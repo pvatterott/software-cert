@@ -2,6 +2,7 @@ package edu.mit.compilers.IR;
 
 public class IrDeclaration extends IrNode {
   private IrType mType;
+  private int mLowerBound, mUpperBound;
   
   public IrDeclaration(IrType type) {
     mType = type;
@@ -9,6 +10,19 @@ public class IrDeclaration extends IrNode {
   
   public IrType getType() {
     return mType;
+  }
+  
+  public void setRange(int lowerBound, int upperBound) {
+    mLowerBound = lowerBound;
+    mUpperBound = upperBound;
+  }
+  
+  public int getLowerBound() {
+    return mLowerBound;
+  }
+  
+  public int getUpperBound() {
+    return mUpperBound;
   }
   
   @Override

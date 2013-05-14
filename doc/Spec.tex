@@ -3,30 +3,45 @@
 \geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
 %\geometry{landscape}                		% Activate for for rotated page geometry
 %\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
-\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsï¿½ with pdflatex; use eps in DVI mode
 								% TeX will automatically convert eps --> pdf in pdflatex		
 \usepackage{amssymb}
+\usepackage{listings}
+\usepackage{enumerate}
 
 \title{Language Specification}
-%\author{}
+\author{Patrick Vatterott}
 %\date{}							% Activate to display a given date or no date
 
 \begin{document}
 \maketitle
 \section{Basic Types}
-\subsection
+\subsection{Identifier}
+
 
 \subsection{Numeric Literal}
 Numeric literals can be expressed in two ways:
 \begin{enumerate}[1)]
-\item \textbf{Decimal:} Decimal literals are expressed as base 10 integers. Formally: $'0' | '1'..'9' ('0'..'9')*$
-\item \textbf{Double:} Double literals are expressed in base 10 and must contain a decimal. Formally: $('0'..'9')+ '.' ('0'..'9')*$
+\item 
+\textbf{Decimal:} Decimal literals are expressed as base 10 integers. Formally: 
+\begin{lstlisting}
+$'0' | '1'..'9' ('0'..'9')*$
+\end{lstlisting}
+\item 
+\textbf{Double:} Double literals are expressed in base 10 and must contain a decimal. Formally: 
+\begin{lstlisting}
+$('0'..'9')+ '.' ('0'..'9')*$
+\end{lstlisting}
 \end{enumerate}
 
 \subsection{Identifier}
-A variable/function name, or identifier, takes the form: $LETTER (LETTER | '0'..'9')*;$ 
+A variable/function name, or identifier, takes the form:
 
-where $LETTER$ is defined as: $('\$' | 'A'..'Z' | 'a'..'z' | '_');$
+\begin{lstlisting}
+$LETTER (LETTER | '0'..'9')*;$ 
+
+$LETTER$ is defined as: $('\$' | 'A'..'Z' | 'a'..'z' | '_');$
+\end{lstlisting}
 
 The placeholder <id> is used to indicate an identifier.
 
@@ -35,15 +50,19 @@ The placeholder <id> is used to indicate an identifier.
 This language supports function definitions and calls that are non-recursive and in the same file.
 Function definitions are of the form:
 
+\begin{lstlisting}
 <type> <id>(<params>) {
 
 }
+\end{lstlisting}
 
 Where <params> is a comma separated list of <type> <id> declarations. For example: 
 
+\begin{lstlisting}
 int foo(int a, double b, int c) {
 
 }
+\end{lstlisting}
 
 Functions do not need to be declared above where they are used. The file has a comprehensive function namespace.
 
@@ -53,23 +72,75 @@ Recursive and mutually recursive functions are not allowed. The graph of functio
 \section{Expressions}
 \subsection{Expressions}
 
+An expression can be an identifier, a literal, or a binary expression.
+Binary expressions take the form:
+\begin{lstlisting}
+  (<id>|<literal>) <op> (<id>|<literal>)
+\end{lstlisting}
 
+\begin{center}
+\begin{tabular}{|l l l l l l|}
+\hline
+$<$ & $>$ & $<=$ & $>=$ & $==$ & $!=$ \\
+\hline
+$+$ & $-$ \\
+\hline
+$*$ & $/$ \\
+\hline
+\end{tabular}
+\end{center}
 
-\subsection{Conditional Expressions}
 \subsection{Assignment Expressions}
 
 We support assignments of the form:
+\begin{lstlisting}
   <id> = <expression>;
   <id> += <expression>;
   <id> -= <expression>;
   <id> *= <expression>;
   <id> /= <expression>;
+\end{lstlisting}
+Expressions of this form will be referred to with the placeholder :
+\begin{lstlisting}
+  <assignment>
+\end{lstlisting}
 
 \section{Control Flow}
-\subsection{For}
-\subsection{While}
-\subsection{If}
 
+
+\subsection{For}
+\begin{lstlisting}
+for (<assignment>; <expression>; <assignment>) {
+
+}
+\end{lstlisting}
+
+\subsection{While}
+
+\begin{lstlisting}
+while (<expression>) {
+
+}
+\end{lstlisting}
+
+
+\subsection{If}
+If statements 
+
+\begin{lstlisting}
+if (<expression>) {
+
+}
+\end{lstlisting}
+
+If statements can also contain an else clause (but no elseif clauses)
+\begin{lstlisting}
+if (<expression>) {
+
+} else {
+
+}
+\end{lstlisting}
 
 
 

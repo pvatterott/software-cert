@@ -1,6 +1,7 @@
 package edu.mit.compilers.semchecker;
 
 import edu.mit.compilers.IR.*;
+import edu.mit.compilers.graphmodel.Bound;
 
 public class SymbolTableBuilder extends SemanticCheck {
   private SymbolTable mTable;
@@ -15,15 +16,22 @@ public class SymbolTableBuilder extends SemanticCheck {
   @Override
   public void visit(IrDeclaration n) {
     IrType t = n.getType();
+    IrIdentifier id;
+    int lower = n.getLowerBound();
+    int upper = n.getUpperBound();
+    Bound b = new Bound(lower, upper);
     for (IrNode c : n.getChildren()) {
       if (c instanceof IrIdentifier) {
-        mTable.addLiteralType(mCurrentFunction, (IrIdentifier)c, t);
+        id = (IrIdentifier)c;
+        mTable.addLiteralType(mCurrentFunction, id, t);
+        mTable.addBounds(mCurrentFunction, id, b);
       } else if (c instanceof IrAssignment) {
         IrAssignment a = (IrAssignment)c;
-        IrIdentifier target = a.getTarget();
-        mTable.addLiteralType(mCurrentFunction, target, t);
+        id = a.getTarget();
+        mTable.addLiteralType(mCurrentFunction, id, t);
+        mTable.addBounds(mCurrentFunction, id, b);
       } else {
-        throw new IllegalArgumentException();
+        throw new RuntimeException("Illegal declaration format");
       }
     }
   }

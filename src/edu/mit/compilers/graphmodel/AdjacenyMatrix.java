@@ -17,6 +17,10 @@ public class AdjacenyMatrix {
     }
   }
   
+  public int getNumNodes() {
+    return mNumNodes;
+  }
+  
   public void addNonJumpLink(int nodeNum, int target) {
     mLinks[nodeNum][0] = target;
   }

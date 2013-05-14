@@ -137,17 +137,11 @@ public class NodeDescriber implements IrNodeVisitor {
     case DIV:
       addOpcode(Opcode.DIV);
       break;
-    case LEFT_SHIFT:
-      addOpcode(Opcode.LEFT_SHIFT);
-      break;
     case MOD:
       addOpcode(Opcode.MOD);
       break;
     case MUL:
       addOpcode(Opcode.MUL);
-      break;
-    case RIGHT_SHIFT:
-      addOpcode(Opcode.RIGHT_SHIFT);
       break;
     case SUB:
       addOpcode(Opcode.SUB);
