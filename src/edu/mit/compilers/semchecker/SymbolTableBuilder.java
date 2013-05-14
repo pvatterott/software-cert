@@ -17,9 +17,7 @@ public class SymbolTableBuilder extends SemanticCheck {
   public void visit(IrDeclaration n) {
     IrType t = n.getType();
     IrIdentifier id;
-    int lower = n.getLowerBound();
-    int upper = n.getUpperBound();
-    Bound b = new Bound(lower, upper);
+    Bound b = n.getBound();
     for (IrNode c : n.getChildren()) {
       if (c instanceof IrIdentifier) {
         id = (IrIdentifier)c;

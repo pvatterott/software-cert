@@ -112,6 +112,22 @@ public class Bound {
     }
   }
   
+  public Bound castInt() {
+    if (mIsDouble) {
+      return new Bound((int)mDoubleLower, (int)mDoubleUpper);
+    } else {
+      return this;
+    }
+  }
+  
+  public Bound castDouble() {
+    if (mIsDouble) {
+      return this;
+    } else {
+      return new Bound((double)mDoubleLower, (double)mDoubleUpper);
+    }
+  }
+  
   @Override
   public String toString() {
     StringBuilder out = new StringBuilder();

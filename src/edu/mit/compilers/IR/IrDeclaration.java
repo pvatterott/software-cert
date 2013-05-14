@@ -1,8 +1,10 @@
 package edu.mit.compilers.IR;
 
+import edu.mit.compilers.graphmodel.Bound;
+
 public class IrDeclaration extends IrNode {
   private IrType mType;
-  private int mLowerBound, mUpperBound;
+  private Bound mBound;
   
   public IrDeclaration(IrType type) {
     mType = type;
@@ -12,17 +14,12 @@ public class IrDeclaration extends IrNode {
     return mType;
   }
   
-  public void setRange(int lowerBound, int upperBound) {
-    mLowerBound = lowerBound;
-    mUpperBound = upperBound;
+  public void setBounds(Bound b) {
+    mBound = b;
   }
   
-  public int getLowerBound() {
-    return mLowerBound;
-  }
-  
-  public int getUpperBound() {
-    return mUpperBound;
+  public Bound getBound() {
+    return mBound;
   }
   
   @Override

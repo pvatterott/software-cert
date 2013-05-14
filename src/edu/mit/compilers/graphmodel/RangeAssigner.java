@@ -63,6 +63,9 @@ public class RangeAssigner implements IrNodeVisitor{
     if (mTable.containsBoundsFor(mFunctionName, n)) {
       b = mTable.getBounds(mFunctionName, n);
       n.setBounds(b);
+    } else if (n.getName() == null) {
+      b = mTable.getDefaultBound();
+      n.setBounds(b);
     }
   }
   

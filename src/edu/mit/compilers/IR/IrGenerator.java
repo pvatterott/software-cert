@@ -4,6 +4,7 @@ import antlr.collections.AST;
 import edu.mit.compilers.IR.IrBinOp.BinOpType;
 import edu.mit.compilers.IR.IrType.Type;
 import edu.mit.compilers.grammar.*;
+import edu.mit.compilers.graphmodel.Bound;
 
 public class IrGenerator {
   public static IrNode getIr(AST ast) {
@@ -320,14 +321,28 @@ public class IrGenerator {
           if (bounds.length != 2) {
             throw new RuntimeException("Range specifier not correctly formatted");
           }
-          int lower, upper;
-          try {
-            lower = Integer.parseInt(bounds[0]);
-            upper = Integer.parseInt(bounds[1]);
-          } catch (NumberFormatException e) {
-            throw new RuntimeException("Range specifier not correctly formatted");
+          Bound b;
+          if (type.getType() == Type.INT) {
+            int lower, upper;
+            try {
+              lower = Integer.parseInt(bounds[0]);
+              upper = Integer.parseInt(bounds[1]);
+              b = new Bound(lower, upper);
+            } catch (NumberFormatException e) {
+              throw new RuntimeException("Range specifier not correctly formatted");
+            }
+            dec.setBounds(b);
+          } else {
+            double lower, upper;
+            try {
+              lower = Double.parseDouble(bounds[0]);
+              upper = Double.parseDouble(bounds[1]);
+              b = new Bound(lower, upper);
+            } catch (NumberFormatException e) {
+              throw new RuntimeException("Range specifier not correctly formatted");
+            }
+            dec.setBounds(b);
           }
-          dec.setRange(lower, upper);
         } else {
           IrNode declared = getIr(next);
           dec.addChild(declared);

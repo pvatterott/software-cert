@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.compilers.IR.*;
+import edu.mit.compilers.IR.IrType.Type;
 import edu.mit.compilers.semchecker.SymbolTable;
 
 public class RangePropagator implements IrNodeVisitor{
@@ -53,8 +54,33 @@ public class RangePropagator implements IrNodeVisitor{
       b = getBoundsFromBinOp(op);
       target.setBounds(b);
       mBounds.put(loc, b);
+    } else if (value instanceof IrCast) {
+      IrCast cast = (IrCast)value;
+      b = getCastedBounds(cast);
+      mBounds.put(loc, b);
     } else {
       throw new RuntimeException("Unexpected RHS in assignment");
+    }
+  }
+  
+  Bound getCastedBounds(IrCast cast) {
+    IrType t = cast.getType();
+    IrExpression expr = cast.getExpression();
+    Bound other;
+    
+    if (expr instanceof IrIdentifier) {
+      IrIdentifier id = (IrIdentifier)expr;
+      other = getIdBounds(id);
+    } else if (expr instanceof IrLiteral) {
+      other = getLitBound((IrLiteral)expr);
+    } else {
+      throw new RuntimeException("Unexpected expression type in cast");
+    }
+    
+    if (t.getType() == Type.DOUBLE) {
+      return other.castDouble();
+    } else {
+      return other.castInt();
     }
   }
   
@@ -130,8 +156,8 @@ public class RangePropagator implements IrNodeVisitor{
     Bound b;
     if (id.hasBounds()) {
       return id.getBounds();
-    } else if (mBounds.containsKey(id)) {
-      b = mBounds.get(id);
+    } else if (mBounds.containsKey(id.getResultAddress())) {
+      b = mBounds.get(id.getResultAddress());
     } else {
       b = mTable.getDefaultBound();
     }
